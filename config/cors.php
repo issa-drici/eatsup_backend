@@ -19,11 +19,20 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_URL', 'http://localhost:3000')],
+    'allowed_origins' => [env('FRONTEND_URL', 'https://v2.eatsup.fr', 'http://localhost:3000')],
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['*'],
+    'allowed_headers' => [
+        'Content-Type',
+        'X-Requested-With',
+        'X-XSRF-TOKEN',
+        'Authorization',
+        'Accept',
+        'Origin',
+        'Cache-Control',
+        'Pragma',
+    ],
 
     'exposed_headers' => [],
 
