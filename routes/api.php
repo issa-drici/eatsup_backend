@@ -11,7 +11,7 @@ use App\Http\Controllers\MenuCategories\CountMenuCategoriesByMenuIdController;
 use App\Http\Controllers\MenuItems\CountMenuItemsByMenuIdController;
 
 // Routes nécessitant l'authentification via Sanctum
-Route::middleware('web')->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
 
     // Route déjà existante : /api/user
     Route::get('/user', function (Request $request) {

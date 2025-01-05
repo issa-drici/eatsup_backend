@@ -13,6 +13,7 @@ use App\Infrastructure\Repositories\EloquentMenuItemRepository;
 use App\Infrastructure\Repositories\EloquentMenuRepository;
 use App\Infrastructure\Repositories\EloquentRestaurantRepository;
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
