@@ -19,12 +19,11 @@ class CreateMenuCategoryUsecase
         private MenuRepositoryInterface $menuRepository,
         private RestaurantRepositoryInterface $restaurantRepository
     ) {
-        //
     }
 
     public function execute(array $data): MenuCategory
     {
-        // 1. Vérifier l’auth
+        // 1. Vérifier l'auth
         $user = Auth::user();
         if (!$user) {
             throw new UnauthorizedException("User not authenticated.");
@@ -52,19 +51,23 @@ class CreateMenuCategoryUsecase
         $countExisting = $this->menuCategoryRepository->countByMenuId($menuId);
         $maxAllowed = $this->getMaxCategoriesByPlan($user->user_plan);
         if ($countExisting >= $maxAllowed) {
-            throw new PlanLimitException("Limit of categories reached for plan: {$user->user_plan}");
+            throw new PlanLimitException(trans('exceptions.plan_limit.menu_categories', ['plan' => $user->user_plan]));
         }
 
-        // 6. Créer l’entité
+        // 6. Récupérer le plus grand sort_order pour ce menu
+        $maxSortOrder = $this->menuCategoryRepository->getMaxSortOrderByMenuId($menuId);
+        $nextSortOrder = $maxSortOrder + 1;
+
+        // 7. Créer l'entité
         $menuCategory = new MenuCategory(
             id: Str::uuid()->toString(),
             menuId: $menuId,
             name: $data['name'],
             description: $data['description'] ?? null,
-            sortOrder: $data['sort_order'] ?? 0
+            sortOrder: $nextSortOrder
         );
 
-        // 7. Persister
+        // 8. Persister
         return $this->menuCategoryRepository->create($menuCategory);
     }
 

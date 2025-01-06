@@ -11,28 +11,28 @@ class CreateMenuCategoryController extends Controller
     public function __construct(
         private CreateMenuCategoryUsecase $createMenuCategoryUsecase
     ) {
-        // Le middleware 'auth:sanctum' sera mis sur la route
     }
 
-    public function __invoke(Request $request)
+    public function __invoke(string $menuId, Request $request)
     {
         $data = $request->validate([
-            'menu_id'     => 'required|uuid',
             'name'        => 'required|array',
             'description' => 'nullable|array',
-            'sort_order'  => 'nullable|integer',
         ]);
 
-        $menuCategories = $this->createMenuCategoryUsecase->execute($data);
+        // Ajouter le menuId aux données
+        $data['menu_id'] = $menuId;
+
+        $menuCategory = $this->createMenuCategoryUsecase->execute($data);
 
         return response()->json([
-            'message' => 'MenuCategories created successfully',
+            'message' => 'Menu category created successfully',
             'data'    => [
-                'id'          => $menuCategories->getId(),
-                'menu_id'     => $menuCategories->getMenuId(),
-                'name'        => $menuCategories->getName(),
-                'description' => $menuCategories->getDescription(),
-                'sort_order'  => $menuCategories->getSortOrder(),
+                'id'          => $menuCategory->getId(),
+                'menu_id'     => $menuCategory->getMenuId(),
+                'name'        => $menuCategory->getName(),
+                'description' => $menuCategory->getDescription(),
+                'sort_order'  => $menuCategory->getSortOrder(),
             ]
         ], 201);
     }

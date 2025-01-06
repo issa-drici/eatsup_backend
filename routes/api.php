@@ -14,6 +14,7 @@ use App\Http\Controllers\MenuCategory\FindMenuCategoryByIdController;
 use App\Http\Controllers\MenuCategory\UpdateMenuCategoryController;
 use App\Http\Controllers\MenuItem\CountMenuItemsByMenuIdController;
 use App\Http\Controllers\MenuItem\FindAllMenuItemsByMenuCategoryIdController;
+use App\Http\Controllers\MenuItem\FindAllMenuItemsByMenuIdGroupedByCategoryNameController;
 
 // Routes nécessitant l'authentification via Sanctum
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -41,6 +42,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('menu')->group(function () {
 
+        // Création d'une catégorie de menu
+        Route::post('/{menuId}/menuCategory/create', CreateMenuCategoryController::class)
+            ->name('menu-category.create-with-menu-id');
+
         // Compte le nombre de catégories dans un menu
         Route::get('/{menuId}/menuCategories/count', CountMenuCategoriesByMenuIdController::class)->name('menu-categories.count.by-menu-id');
 
@@ -48,10 +53,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/{menuId}/menuCategories', FindAllMenuCategoriesByMenuIdController::class)
             ->name('menu-categories.find-by-menu-id');
 
-        
-
         // Compte le nombre d'items dans un menu
         Route::get('/{menuId}/menuItems/count', CountMenuItemsByMenuIdController::class)->name('menu-items.count.by-menu-id');
+
+        // Liste tous les items d'un menu groupés par catégorie
+        Route::get('/{menuId}/menuItems/groupedByCategoryName', FindAllMenuItemsByMenuIdGroupedByCategoryNameController::class)
+            ->name('menu-items.grouped-by-category');
     });
 
 

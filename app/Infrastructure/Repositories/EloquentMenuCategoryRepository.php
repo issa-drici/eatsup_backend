@@ -62,6 +62,14 @@ class EloquentMenuCategoryRepository implements MenuCategoryRepositoryInterface
         })->all();
     }
 
+    public function getMaxSortOrderByMenuId(string $menuId): int
+    {
+        $maxSortOrder = MenuCategoryModel::where('menu_id', $menuId)
+            ->max('sort_order');
+
+        return $maxSortOrder ?? 0; // Retourne 0 si aucune catégorie n'existe
+    }
+
     private function toDomainEntity(MenuCategoryModel $model): MenuCategory
     {
         return new MenuCategory(
