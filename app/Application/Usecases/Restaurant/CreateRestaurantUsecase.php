@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Domain\Entities\Restaurant;
 use App\Domain\Repositories\RestaurantRepositoryInterface;
 use App\Exceptions\UnauthorizedException;
-use App\Exceptions\PlanLimitException;
 
 class CreateRestaurantUsecase
 {

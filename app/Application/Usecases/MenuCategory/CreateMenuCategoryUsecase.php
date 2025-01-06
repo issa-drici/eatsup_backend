@@ -49,7 +49,7 @@ class CreateMenuCategoryUsecase
         }
 
         // 5. Limitation par plan
-        $countExisting = $this->menuCategoryRepository->findByMenuIdAndCount($menuId);
+        $countExisting = $this->menuCategoryRepository->countByMenuId($menuId);
         $maxAllowed = $this->getMaxCategoriesByPlan($user->user_plan);
         if ($countExisting >= $maxAllowed) {
             throw new PlanLimitException("Limit of categories reached for plan: {$user->user_plan}");

@@ -2,13 +2,13 @@
 
 namespace Database\Factories;
 
-use App\Infrastructure\Models\MenuCategoryModel;
+use App\Infrastructure\Models\MenuCategoriesModel;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
-class MenuCategoryFactory extends Factory
+class MenuCategoriesFactory extends Factory
 {
-    protected $model = MenuCategoryModel::class;
+    protected $model = MenuCategoriesModel::class;
 
     public function definition(): array
     {

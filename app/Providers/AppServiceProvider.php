@@ -5,11 +5,11 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Domain\Repositories\MenuCategoryRepositoryInterface;
 use App\Domain\Repositories\MenuItemRepositoryInterface;
-use App\Infrastructure\Repositories\EloquentMenuCategoryRepository;
-
 use App\Domain\Repositories\MenuRepositoryInterface;
 use App\Domain\Repositories\RestaurantRepositoryInterface;
+use App\Infrastructure\Repositories\EloquentMenuCategoryRepository;
 use App\Infrastructure\Repositories\EloquentMenuItemRepository;
+use App\Infrastructure\Repositories\EloquentMenuItemsRepository;
 use App\Infrastructure\Repositories\EloquentMenuRepository;
 use App\Infrastructure\Repositories\EloquentRestaurantRepository;
 use Illuminate\Auth\Notifications\ResetPassword;

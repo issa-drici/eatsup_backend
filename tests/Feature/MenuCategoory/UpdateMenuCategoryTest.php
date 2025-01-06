@@ -1,6 +1,6 @@
 <?php
 
-use App\Infrastructure\Models\MenuCategoryModel;
+use App\Infrastructure\Models\MenuCategoriesModel;
 use App\Infrastructure\Models\MenuModel;
 use App\Infrastructure\Models\RestaurantModel;
 use App\Models\User;
@@ -27,7 +27,7 @@ it('updates a menu category successfully', function () {
     ]);
 
     // 4. Créer une catégorie liée à ce menu
-    $menuCategory = MenuCategoryModel::factory()->create([
+    $menuCategories = MenuCategoriesModel::factory()->create([
         'menu_id' => $menu->id,
     ]);
 
@@ -35,7 +35,7 @@ it('updates a menu category successfully', function () {
     Auth::login($user);
 
     // 6. Envoyer une requête PUT pour mettre à jour la catégorie
-    $response = $this->putJson("/api/menu-categories/{$menuCategory->id}", [
+    $response = $this->putJson("/api/menu-categories/{$menuCategories->id}", [
         'name' => ['en' => 'Main Courses', 'fr' => 'Plats Principaux'],
         'description' => ['en' => 'Main dishes', 'fr' => 'Plats principaux'],
         'sort_order' => 2,
@@ -71,7 +71,7 @@ it('fails to update a menu category if the menu does not belong to the user', fu
     ]);
 
     // 4. Créer une catégorie pour le menu de B
-    $menuCategory = MenuCategoryModel::factory()->create([
+    $menuCategories = MenuCategoriesModel::factory()->create([
         'menu_id' => $menu->id,
     ]);
 
@@ -79,7 +79,7 @@ it('fails to update a menu category if the menu does not belong to the user', fu
     Auth::login($userA);
 
     // 6. Essayer de mettre à jour la catégorie
-    $response = $this->putJson("/api/menu-categories/{$menuCategory->id}", [
+    $response = $this->putJson("/api/menu-categories/{$menuCategories->id}", [
         'name' => ['en' => 'Main Courses', 'fr' => 'Plats Principaux'],
         'description' => ['en' => 'Main dishes', 'fr' => 'Plats principaux'],
         'sort_order' => 2,

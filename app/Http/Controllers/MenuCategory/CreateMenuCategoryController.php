@@ -23,16 +23,16 @@ class CreateMenuCategoryController extends Controller
             'sort_order'  => 'nullable|integer',
         ]);
 
-        $menuCategory = $this->createMenuCategoryUsecase->execute($data);
+        $menuCategories = $this->createMenuCategoryUsecase->execute($data);
 
         return response()->json([
-            'message' => 'MenuCategory created successfully',
+            'message' => 'MenuCategories created successfully',
             'data'    => [
-                'id'          => $menuCategory->getId(),
-                'menu_id'     => $menuCategory->getMenuId(),
-                'name'        => $menuCategory->getName(),
-                'description' => $menuCategory->getDescription(),
-                'sort_order'  => $menuCategory->getSortOrder(),
+                'id'          => $menuCategories->getId(),
+                'menu_id'     => $menuCategories->getMenuId(),
+                'name'        => $menuCategories->getName(),
+                'description' => $menuCategories->getDescription(),
+                'sort_order'  => $menuCategories->getSortOrder(),
             ]
         ], 201);
     }

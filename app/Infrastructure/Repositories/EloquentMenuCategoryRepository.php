@@ -38,15 +38,28 @@ class EloquentMenuCategoryRepository implements MenuCategoryRepositoryInterface
     public function findById(string $id): ?MenuCategory
     {
         $model = MenuCategoryModel::find($id);
+
         if (!$model) {
             return null;
         }
+
         return $this->toDomainEntity($model);
     }
 
-    public function findByMenuIdAndCount(string $menuId): int
+    public function countByMenuId(string $menuId): int
     {
         return MenuCategoryModel::where('menu_id', $menuId)->count();
+    }
+
+    public function findAllByMenuId(string $menuId): array
+    {
+        $models = MenuCategoryModel::where('menu_id', $menuId)
+            ->orderBy('sort_order')
+            ->get();
+
+        return $models->map(function ($model) {
+            return $this->toDomainEntity($model);
+        })->all();
     }
 
     private function toDomainEntity(MenuCategoryModel $model): MenuCategory

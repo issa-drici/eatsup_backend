@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\MenuCategories;
+namespace App\Http\Controllers\MenuCategory;
 
 use App\Application\Usecases\MenuCategory\CountMenuCategoriesByMenuIdUsecase;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class CountMenuCategoriesByMenuIdController extends Controller
 {

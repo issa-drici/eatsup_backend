@@ -25,7 +25,7 @@ class UpdateMenuCategoryController extends Controller
         $menuCategory = $this->updateMenuCategoryUsecase->execute($id, $data);
 
         return response()->json([
-            'message' => 'MenuCategory updated successfully',
+            'message' => 'MenuCategories updated successfully',
             'data'    => [
                 'id'          => $menuCategory->getId(),
                 'menu_id'     => $menuCategory->getMenuId(),

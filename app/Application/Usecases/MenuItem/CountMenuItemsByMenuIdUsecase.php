@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Application\Usecases\MenuItems;
+namespace App\Application\Usecases\MenuItem;
 
 use Illuminate\Support\Facades\Auth;
 use App\Domain\Repositories\MenuItemRepositoryInterface;

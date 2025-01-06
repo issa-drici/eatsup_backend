@@ -2,39 +2,42 @@
 
 namespace App\Application\Usecases\MenuCategory;
 
+use App\Domain\Entities\MenuCategory;
 use Illuminate\Support\Facades\Auth;
 use App\Domain\Repositories\MenuCategoryRepositoryInterface;
 use App\Domain\Repositories\MenuRepositoryInterface;
 use App\Exceptions\UnauthorizedException;
 
-class CountMenuCategoriesByMenuIdUsecase
+
+class FindMenuCategoryByIdUsecase
 {
     public function __construct(
         private MenuCategoryRepositoryInterface $menuCategoryRepository,
         private MenuRepositoryInterface $menuRepository
-    ) {
-        //
-    }
+    ) {}
 
-    public function execute(string $menuId): int
+    public function execute(string $categoryId): MenuCategory
     {
+        // 1. Vérifier l'authentification
         $user = Auth::user();
         if (!$user) {
             throw new UnauthorizedException("User not authenticated.");
         }
 
-        // Vérifier si le menu existe et appartient à un restaurant accessible
-        $menu = $this->menuRepository->findById($menuId);
-        if (!$menu) {
-            throw new \Exception("Menu not found.");
+
+        // 3. Récupérer la catégorie
+        $category = $this->menuCategoryRepository->findById($categoryId);
+        if (!$category) {
+            throw new \Exception("Menu category not found.");
         }
 
-        // Si le rôle n'est pas admin ou franchise_manager, vérifier l'accès
+
+
+        // 5. Vérifier les permissions selon le rôle
         if (!in_array($user->role, ['admin', 'restaurant_owner', 'franchise_manager'])) {
-            throw new UnauthorizedException("You do not have access to this menu.");
+            throw new UnauthorizedException("You do not have access to this menu category.");
         }
 
-        // Retourner le nombre de catégories
-        return $this->menuCategoryRepository->countByMenuId($menuId);
+        return $category;
     }
 }

@@ -7,34 +7,45 @@ use App\Domain\Repositories\MenuCategoryRepositoryInterface;
 use App\Domain\Repositories\MenuRepositoryInterface;
 use App\Exceptions\UnauthorizedException;
 
-class CountMenuCategoriesByMenuIdUsecase
+class FindAllMenuCategoriesByMenuIdUsecase
 {
     public function __construct(
         private MenuCategoryRepositoryInterface $menuCategoryRepository,
         private MenuRepositoryInterface $menuRepository
     ) {
-        //
     }
 
-    public function execute(string $menuId): int
+    public function execute(string $menuId): array
     {
+        // 1. Vérifier l'authentification
         $user = Auth::user();
         if (!$user) {
             throw new UnauthorizedException("User not authenticated.");
         }
 
-        // Vérifier si le menu existe et appartient à un restaurant accessible
+        // 2. Vérifier si le menu existe
         $menu = $this->menuRepository->findById($menuId);
         if (!$menu) {
             throw new \Exception("Menu not found.");
         }
 
-        // Si le rôle n'est pas admin ou franchise_manager, vérifier l'accès
+        // 3. Vérifier les permissions selon le rôle
         if (!in_array($user->role, ['admin', 'restaurant_owner', 'franchise_manager'])) {
             throw new UnauthorizedException("You do not have access to this menu.");
         }
 
-        // Retourner le nombre de catégories
-        return $this->menuCategoryRepository->countByMenuId($menuId);
+        // 4. Récupérer et retourner les catégories
+        $categories = $this->menuCategoryRepository->findAllByMenuId($menuId);
+
+        // 5. Formater les données pour la réponse
+        return array_map(function ($category) {
+            return [
+                'id' => $category->getId(),
+                'menu_id' => $category->getMenuId(),
+                'name' => $category->getName(),
+                'description' => $category->getDescription(),
+                'sort_order' => $category->getSortOrder(),
+            ];
+        }, $categories);
     }
-}
+} 

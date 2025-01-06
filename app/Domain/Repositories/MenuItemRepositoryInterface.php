@@ -2,7 +2,13 @@
 
 namespace App\Domain\Repositories;
 
+use App\Domain\Entities\MenuItem;
+
 interface MenuItemRepositoryInterface
 {
+    public function create(MenuItem $menuItem): MenuItem;
+    public function update(MenuItem $menuItem): MenuItem;
+    public function findById(string $id): ?MenuItem;
     public function findByMenuIdAndCount(string $menuId): int;
+    public function findAllByMenuCategoryId(string $menuCategoryId): array;
 }
