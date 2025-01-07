@@ -71,6 +71,14 @@ class EloquentMenuItemRepository implements MenuItemRepositoryInterface
         return $models->map(fn($model) => $this->toEntity($model))->all();
     }
 
+    public function getMaxSortOrderByCategoryId(string $categoryId): int
+    {
+        $maxSortOrder = MenuItemModel::where('category_id', $categoryId)
+            ->max('sort_order');
+
+        return $maxSortOrder ?? 0; // Retourne 0 si aucun item n'existe
+    }
+
     private function toEntity(MenuItemModel $model): MenuItem
     {
         return new MenuItem(
