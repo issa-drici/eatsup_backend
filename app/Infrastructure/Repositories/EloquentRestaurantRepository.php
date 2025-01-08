@@ -97,6 +97,95 @@ class EloquentRestaurantRepository implements RestaurantRepositoryInterface
         );
     }
 
+    public function findAllWithOwners(): array
+    {
+        $restaurants = RestaurantModel::join('users', 'restaurants.owner_id', '=', 'users.id')
+            ->select(
+                'restaurants.*',
+                'users.name as owner_name',
+                'users.email as owner_email',
+                'users.role as owner_role',
+                'users.user_plan as owner_plan',
+                'users.user_subscription_status as owner_subscription_status'
+            )
+            ->get();
+
+        return $restaurants->map(function ($model) {
+            return RestaurantWithOwnerDTO::fromRestaurantAndUser(
+                $this->toDomainEntity($model),
+                new User(
+                    id: $model->owner_id,
+                    name: $model->owner_name,
+                    email: $model->owner_email,
+                    role: $model->owner_role,
+                    userPlan: $model->owner_plan,
+                    userSubscriptionStatus: $model->owner_subscription_status
+                )
+            );
+        })->all();
+    }
+
+    public function findAllWithOwnersPaginated(array $filters = [], int $page = 1, int $perPage = 10): array
+    {
+        $query = RestaurantModel::query()
+            ->join('users', 'restaurants.owner_id', '=', 'users.id')
+            ->select(
+                'restaurants.*',
+                'users.name as owner_name',
+                'users.email as owner_email',
+                'users.role as owner_role',
+                'users.user_plan as owner_plan',
+                'users.user_subscription_status as owner_subscription_status'
+            );
+
+        // Appliquer les filtres
+        foreach ($filters as $key => $value) {
+            switch ($key) {
+                case 'name':
+                    $query->whereRaw('LOWER(restaurants.name) LIKE ?', ['%' . strtolower($value) . '%']);
+                    break;
+                case 'address':
+                    $query->where('restaurants.address', 'like', "%{$value}%");
+                    break;
+                case 'phone':
+                    $query->where('restaurants.phone', 'like', "%{$value}%");
+                    break;
+                case 'owner_name':
+                    $query->where('users.name', 'like', "%{$value}%");
+                    break;
+                case 'owner_email':
+                    $query->where('users.email', 'like', "%{$value}%");
+                    break;
+                case 'owner_plan':
+                    $query->where('users.user_plan', $value);
+                    break;
+            }
+        }
+
+        $paginator = $query->paginate($perPage, ['*'], 'page', $page);
+        $restaurants = $paginator->items();
+
+        return [
+            'data' => array_map(function ($model) {
+                return RestaurantWithOwnerDTO::fromRestaurantAndUser(
+                    $this->toDomainEntity($model),
+                    new User(
+                        id: $model->owner_id,
+                        name: $model->owner_name,
+                        email: $model->owner_email,
+                        role: $model->owner_role,
+                        userPlan: $model->owner_plan,
+                        userSubscriptionStatus: $model->owner_subscription_status
+                    )
+                );
+            }, $restaurants),
+            'current_page' => $paginator->currentPage(),
+            'per_page' => $paginator->perPage(),
+            'total' => $paginator->total(),
+            'last_page' => $paginator->lastPage()
+        ];
+    }
+
     private function toDomainEntity(RestaurantModel $model): Restaurant
     {
         return new Restaurant(
