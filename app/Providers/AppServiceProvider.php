@@ -14,6 +14,8 @@ use App\Infrastructure\Repositories\EloquentMenuRepository;
 use App\Infrastructure\Repositories\EloquentRestaurantRepository;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Support\Facades\URL;
+use App\Domain\Repositories\QrCodeRepositoryInterface;
+use App\Infrastructure\Repositories\EloquentQrCodeRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(MenuRepositoryInterface::class, EloquentMenuRepository::class);
         $this->app->bind(MenuItemRepositoryInterface::class, EloquentMenuItemRepository::class);
         $this->app->bind(RestaurantRepositoryInterface::class, EloquentRestaurantRepository::class);
+        $this->app->bind(QrCodeRepositoryInterface::class, EloquentQrCodeRepository::class);
     }
 
     /**

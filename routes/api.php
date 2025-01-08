@@ -16,6 +16,10 @@ use App\Http\Controllers\MenuItem\CountMenuItemsByMenuIdController;
 use App\Http\Controllers\MenuItem\FindAllMenuItemsByMenuCategoryIdController;
 use App\Http\Controllers\MenuItem\FindAllMenuItemsByMenuIdGroupedByCategoryNameController;
 use App\Http\Controllers\MenuItem\CreateMenuItemController;
+use App\Http\Controllers\Restaurant\FindAllRestaurantsWithoutQRCodeController;
+use App\Http\Controllers\Restaurant\FindRestaurantByIdController;
+use App\Http\Controllers\QrCode\UpdateQrCodeController;
+use App\Http\Controllers\QrCode\FindAllQrCodesByRestaurantIdController;
 
 // Routes nécessitant l'authentification via Sanctum
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -77,4 +81,17 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/{menuCategoryId}/item/create', CreateMenuItemController::class)
             ->name('menu-items.create');
     });
+
+    // Liste des restaurants sans QR code
+    Route::get('/restaurants/without-qr-code', FindAllRestaurantsWithoutQRCodeController::class)
+        ->name('restaurants.without-qr-code');
+
+    Route::get('/restaurant/{restaurantId}', FindRestaurantByIdController::class)
+        ->name('restaurant.find-by-id');
+
+    Route::put('/associate-qr/qr-code/{qrCodeId}', UpdateQrCodeController::class)
+        ->name('qr-codes.update');
+
+    Route::get('/qr-code/restaurant/{restaurantId}', FindAllQrCodesByRestaurantIdController::class)
+        ->name('qr-codes.find-all-by-restaurant-id');
 });

@@ -30,6 +30,8 @@ class FindAllMenusByRestaurantIdUsecase
             if (!$restaurant || $restaurant->getId() !== $restaurantId) {
                 throw new UnauthorizedException("You do not have access to this restaurant.");
             }
+        } else if ($user->role === 'admin') {
+            $restaurant = $this->restaurantRepository->findByOwnerId($user->id);
         }
 
         // 3. Récupérer tous les menus liés à ce restaurant
