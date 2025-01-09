@@ -7,6 +7,9 @@ use App\Domain\Repositories\RestaurantRepositoryInterface;
 use App\Infrastructure\Models\RestaurantModel;
 use App\Domain\Entities\User;
 use App\Application\DTOs\RestaurantWithOwnerDTO;
+use App\Application\DTOs\RestaurantWithOwnerAndQrCodeCountDTO;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class EloquentRestaurantRepository implements RestaurantRepositoryInterface
 {
@@ -41,14 +44,19 @@ class EloquentRestaurantRepository implements RestaurantRepositoryInterface
     public function findAllWithoutQRCode(): array
     {
         $restaurants = RestaurantModel::whereNotExists(function ($query) {
-                $query->select('id')
-                      ->from('qr_codes')
-                      ->whereRaw('restaurants.id = qr_codes.restaurant_id');
-            })
+            $query->select('id')
+                ->from('qr_codes')
+                ->whereRaw('restaurants.id = qr_codes.restaurant_id');
+        })
             ->join('users', 'restaurants.owner_id', '=', 'users.id')
-            ->select('restaurants.*', 'users.name as owner_name', 'users.email as owner_email', 
-                    'users.role as owner_role', 'users.user_plan as owner_plan', 
-                    'users.user_subscription_status as owner_subscription_status')
+            ->select(
+                'restaurants.*',
+                'users.name as owner_name',
+                'users.email as owner_email',
+                'users.role as owner_role',
+                'users.user_plan as owner_plan',
+                'users.user_subscription_status as owner_subscription_status'
+            )
             ->get();
 
         return $restaurants->map(function ($model) {
@@ -184,6 +192,55 @@ class EloquentRestaurantRepository implements RestaurantRepositoryInterface
             'total' => $paginator->total(),
             'last_page' => $paginator->lastPage()
         ];
+    }
+
+    public function findAllWithQrCodeCount(): array
+    {
+        $restaurants = RestaurantModel::join('users', 'restaurants.owner_id', '=', 'users.id')
+            ->leftJoin('qr_codes', 'restaurants.id', '=', 'qr_codes.restaurant_id')
+            ->select(
+                'restaurants.*',
+                'users.name as owner_name',
+                'users.email as owner_email',
+                'users.role as owner_role',
+                'users.user_plan as owner_plan',
+                'users.user_subscription_status as owner_subscription_status',
+                DB::raw('COUNT(qr_codes.id) as qr_codes_count')
+            )
+            ->groupBy(
+                'restaurants.id',
+                'restaurants.owner_id',
+                'restaurants.name',
+                'restaurants.address',
+                'restaurants.phone',
+                'restaurants.created_at',
+                'restaurants.updated_at',
+                'users.name',
+                'users.email',
+                'users.role',
+                'users.user_plan',
+                'users.user_subscription_status'
+            )
+            ->get();
+
+        return $restaurants->map(function ($model) {
+            $restaurantDTO = RestaurantWithOwnerDTO::fromRestaurantAndUser(
+                $this->toDomainEntity($model),
+                new User(
+                    id: $model->owner_id,
+                    name: $model->owner_name,
+                    email: $model->owner_email,
+                    role: $model->owner_role,
+                    userPlan: $model->owner_plan,
+                    userSubscriptionStatus: $model->owner_subscription_status
+                )
+            );
+
+            return RestaurantWithOwnerAndQrCodeCountDTO::fromRestaurantWithOwnerDTO(
+                $restaurantDTO,
+                $model->qr_codes_count
+            );
+        })->all();
     }
 
     private function toDomainEntity(RestaurantModel $model): Restaurant

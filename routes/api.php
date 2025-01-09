@@ -21,6 +21,7 @@ use App\Http\Controllers\Restaurant\FindRestaurantByIdController;
 use App\Http\Controllers\QrCode\UpdateQrCodeController;
 use App\Http\Controllers\QrCode\FindAllQrCodesByRestaurantIdController;
 use App\Http\Controllers\Restaurant\FindAllRestaurantsController;
+use App\Http\Controllers\Restaurant\FindAllRestaurantsWithQrCodeCountController;
 
 // Routes nécessitant l'authentification via Sanctum
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -98,4 +99,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/restaurants', FindAllRestaurantsController::class)
         ->name('restaurants.find-all');
+
+    Route::get('/restaurants/with-qr-code-count', FindAllRestaurantsWithQrCodeCountController::class)
+        ->name('restaurants.with-qr-code-count');
 });
