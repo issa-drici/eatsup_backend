@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers\MenuItem;
 
-use App\Application\Usecases\MenuItem\FindAllMenuItemsByMenuIdGroupedByCategoryNameUsecase;
+use App\Application\Usecases\MenuItem\FindAllMenuItemsByMenuIdGroupedByCategoryNamePublicUsecase;
 use App\Http\Controllers\Controller;
 
 class FindAllMenuItemsByMenuIdGroupedByCategoryNameController extends Controller
 {
     public function __construct(
-        private FindAllMenuItemsByMenuIdGroupedByCategoryNameUsecase $findAllMenuItemsByMenuIdGroupedByCategoryNameUsecase
+        private FindAllMenuItemsByMenuIdGroupedByCategoryNamePublicUsecase $usecase
     ) {
     }
 
     public function __invoke(string $menuId)
     {
-        $groupedItems = $this->findAllMenuItemsByMenuIdGroupedByCategoryNameUsecase->execute($menuId);
+        $items = $this->usecase->execute($menuId);
 
         return response()->json([
-            'message' => 'Menu items grouped by category retrieved successfully',
-            'data'    => $groupedItems
+            'message' => 'Menu items retrieved successfully',
+            'data'    => $items
         ]);
     }
 } 
