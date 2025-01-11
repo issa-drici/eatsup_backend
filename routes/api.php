@@ -25,6 +25,8 @@ use App\Http\Controllers\Restaurant\FindAllRestaurantsWithQrCodeCountController;
 use App\Http\Controllers\QrCode\FindQrCodeByIdController;
 use App\Http\Controllers\MenuItem\DeleteMenuItemByIdController;
 use App\Http\Controllers\MenuCategory\DeleteMenuCategoryByIdController;
+use App\Http\Controllers\QrCodeSession\CountQrCodeSessionsByRestaurantIdController;
+use App\Http\Controllers\QrCodeSession\CreateQrCodeSessionController;
 
 // Routes nécessitant l'authentification via Sanctum
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -115,11 +117,18 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::delete('/menuCategory/{menuCategoryId}/delete', DeleteMenuCategoryByIdController::class)
         ->name('menu-categories.delete');
+
+    Route::get('/restaurant/{restaurantId}/qrCodeSessions/count', CountQrCodeSessionsByRestaurantIdController::class)
+        ->name('qr-code-sessions.count-by-restaurant-id');
 });
 
 // Route publique pour les QR codes
 Route::get('/qr-code/{qrCodeId}', FindQrCodeByIdController::class)
     ->name('qr-codes.find-by-id');
+
+// Route publique pour créer une session QR code
+Route::post('/qr-code/{qrCodeId}/qrCodeSession/create', CreateQrCodeSessionController::class)
+    ->name('qr-code-sessions.create');
 
 // Dans le groupe des routes publiques (en dehors du middleware auth:sanctum)
 Route::get('/menu/{menuId}/menuItems/groupedByCategoryName', FindAllMenuItemsByMenuIdGroupedByCategoryNameController::class)
