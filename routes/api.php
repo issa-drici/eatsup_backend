@@ -23,6 +23,7 @@ use App\Http\Controllers\QrCode\FindAllQrCodesByRestaurantIdController;
 use App\Http\Controllers\Restaurant\FindAllRestaurantsController;
 use App\Http\Controllers\Restaurant\FindAllRestaurantsWithQrCodeCountController;
 use App\Http\Controllers\QrCode\FindQrCodeByIdController;
+use App\Http\Controllers\MenuItem\DeleteMenuItemByIdController;
 
 // Routes nécessitant l'authentification via Sanctum
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -108,7 +109,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/qr-code/restaurant/{restaurantId}', FindAllQrCodesByRestaurantIdController::class)
         ->name('qr-codes.find-all-by-restaurant-id');
 
-        
+    Route::delete('/menuItem/{menuItemId}/delete', DeleteMenuItemByIdController::class)
+        ->name('menu-items.delete');
 });
 
 // Route publique pour les QR codes

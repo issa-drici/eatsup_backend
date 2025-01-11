@@ -79,6 +79,12 @@ class EloquentMenuItemRepository implements MenuItemRepositoryInterface
         return $maxSortOrder ?? 0; // Retourne 0 si aucun item n'existe
     }
 
+    public function delete(string $id): void
+    {
+        $model = MenuItemModel::findOrFail($id);
+        $model->delete();
+    }
+
     private function toEntity(MenuItemModel $model): MenuItem
     {
         return new MenuItem(
