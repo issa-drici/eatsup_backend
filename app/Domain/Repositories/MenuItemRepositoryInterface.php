@@ -13,4 +13,5 @@ interface MenuItemRepositoryInterface
     public function findAllByMenuCategoryId(string $menuCategoryId): array;
     public function getMaxSortOrderByCategoryId(string $categoryId): int;
     public function delete(string $id): void;
+    public function countByCategoryId(string $categoryId): int;
 }

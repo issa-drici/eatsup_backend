@@ -70,6 +70,12 @@ class EloquentMenuCategoryRepository implements MenuCategoryRepositoryInterface
         return $maxSortOrder ?? 0; // Retourne 0 si aucune catégorie n'existe
     }
 
+    public function delete(string $id): void
+    {
+        $model = MenuCategoryModel::findOrFail($id);
+        $model->delete();
+    }
+
     private function toDomainEntity(MenuCategoryModel $model): MenuCategory
     {
         return new MenuCategory(

@@ -85,6 +85,11 @@ class EloquentMenuItemRepository implements MenuItemRepositoryInterface
         $model->delete();
     }
 
+    public function countByCategoryId(string $categoryId): int
+    {
+        return MenuItemModel::where('category_id', $categoryId)->count();
+    }
+
     private function toEntity(MenuItemModel $model): MenuItem
     {
         return new MenuItem(
