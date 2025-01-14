@@ -23,7 +23,7 @@ class EloquentMenuItemRepository implements MenuItemRepositoryInterface
             'sort_order' => $menuItem->getSortOrder()
         ]);
 
-        return $this->toEntity($model);
+        return $this->toDomainEntity($model);
     }
 
     public function update(MenuItem $menuItem): MenuItem
@@ -40,7 +40,7 @@ class EloquentMenuItemRepository implements MenuItemRepositoryInterface
             'sort_order' => $menuItem->getSortOrder()
         ]);
 
-        return $this->toEntity($model);
+        return $this->toDomainEntity($model);
     }
 
     public function findById(string $id): ?MenuItem
@@ -51,7 +51,7 @@ class EloquentMenuItemRepository implements MenuItemRepositoryInterface
             return null;
         }
 
-        return $this->toEntity($model);
+        return $this->toDomainEntity($model);
     }
 
     public function findByMenuIdAndCount(string $menuId): int
@@ -68,7 +68,7 @@ class EloquentMenuItemRepository implements MenuItemRepositoryInterface
             ->orderBy('sort_order')
             ->get();
             
-        return $models->map(fn($model) => $this->toEntity($model))->all();
+        return $models->map(fn($model) => $this->toDomainEntity($model))->all();
     }
 
     public function getMaxSortOrderByCategoryId(string $categoryId): int
@@ -90,7 +90,27 @@ class EloquentMenuItemRepository implements MenuItemRepositoryInterface
         return MenuItemModel::where('category_id', $categoryId)->count();
     }
 
-    private function toEntity(MenuItemModel $model): MenuItem
+    public function findPreviousItemInCategory(string $categoryId, int $currentSortOrder): ?MenuItem
+    {
+        $model = MenuItemModel::where('category_id', $categoryId)
+            ->where('sort_order', '<', $currentSortOrder)
+            ->orderBy('sort_order', 'desc')
+            ->first();
+
+        return $model ? $this->toDomainEntity($model) : null;
+    }
+
+    public function findNextItemInCategory(string $categoryId, int $currentSortOrder): ?MenuItem
+    {
+        $model = MenuItemModel::where('category_id', $categoryId)
+            ->where('sort_order', '>', $currentSortOrder)
+            ->orderBy('sort_order', 'asc')
+            ->first();
+
+        return $model ? $this->toDomainEntity($model) : null;
+    }
+
+    private function toDomainEntity(MenuItemModel $model): MenuItem
     {
         return new MenuItem(
             id: $model->id,

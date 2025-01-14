@@ -11,10 +11,9 @@ class UpdateMenuCategoryController extends Controller
     public function __construct(
         private UpdateMenuCategoryUsecase $updateMenuCategoryUsecase
     ) {
-        // Le middleware 'auth:sanctum' sera mis sur la route
     }
 
-    public function __invoke(string $id, Request $request)
+    public function __invoke(string $menuCategoryId, Request $request)
     {
         $data = $request->validate([
             'name'        => 'sometimes|array',
@@ -22,10 +21,10 @@ class UpdateMenuCategoryController extends Controller
             'sort_order'  => 'nullable|integer',
         ]);
 
-        $menuCategory = $this->updateMenuCategoryUsecase->execute($id, $data);
+        $menuCategory = $this->updateMenuCategoryUsecase->execute($menuCategoryId, $data);
 
         return response()->json([
-            'message' => 'MenuCategories updated successfully',
+            'message' => 'Menu category updated successfully',
             'data'    => [
                 'id'          => $menuCategory->getId(),
                 'menu_id'     => $menuCategory->getMenuId(),

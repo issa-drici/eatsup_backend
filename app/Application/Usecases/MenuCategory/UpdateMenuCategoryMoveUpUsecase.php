@@ -3,14 +3,13 @@
 namespace App\Application\Usecases\MenuCategory;
 
 use Illuminate\Support\Facades\Auth;
-
 use App\Domain\Entities\MenuCategory;
 use App\Domain\Repositories\MenuCategoryRepositoryInterface;
 use App\Domain\Repositories\MenuRepositoryInterface;
 use App\Domain\Repositories\RestaurantRepositoryInterface;
 use App\Exceptions\UnauthorizedException;
 
-class UpdateMenuCategoryUsecase
+class UpdateMenuCategoryMoveUpUsecase
 {
     public function __construct(
         private MenuCategoryRepositoryInterface $menuCategoryRepository,
@@ -19,7 +18,7 @@ class UpdateMenuCategoryUsecase
     ) {
     }
 
-    public function execute(string $menuCategoryId, array $data): MenuCategory
+    public function execute(string $menuCategoryId): MenuCategory
     {
         // 1. Auth
         $user = Auth::user();
@@ -29,23 +28,22 @@ class UpdateMenuCategoryUsecase
 
         // 2. Rôle
         if (!in_array($user->role, ['admin', 'restaurant_owner', 'franchise_manager'])) {
-            throw new UnauthorizedException("User not allowed to update categories.");
+            throw new UnauthorizedException("User not allowed to update menu categories.");
         }
 
-        // 3. Retrouver la cat
-        $existingCategory = $this->menuCategoryRepository->findById($menuCategoryId);
-        if (!$existingCategory) {
+        // 3. Retrouver la catégorie
+        $currentCategory = $this->menuCategoryRepository->findById($menuCategoryId);
+        if (!$currentCategory) {
             throw new \Exception("Menu category not found.");
         }
 
-        // 4. Vérifier le menu => si c'est bien le sien
-        $menuId = $existingCategory->getMenuId();
-        $menu = $this->menuRepository->findById($menuId);
+        // 4. Vérifier le menu
+        $menu = $this->menuRepository->findById($currentCategory->getMenuId());
         if (!$menu) {
-            throw new \Exception("Menu not found for this category.");
+            throw new \Exception("Menu not found.");
         }
 
-        // 5. Si l'utilisateur n'est pas admin ou franchise_manager, vérifier qu'il est propriétaire
+        // 5. Vérifier les permissions
         if (!in_array($user->role, ['admin', 'franchise_manager'])) {
             $restaurant = $this->restaurantRepository->findByOwnerId($user->id);
             if (!$restaurant || $restaurant->getId() !== $menu->getRestaurantId()) {
@@ -53,18 +51,25 @@ class UpdateMenuCategoryUsecase
             }
         }
 
-        // 6. Mettre à jour l'entité
-        if (isset($data['name'])) {
-            $existingCategory->setName($data['name']);
-        }
-        if (array_key_exists('description', $data)) {
-            $existingCategory->setDescription($data['description']);
-        }
-        if (isset($data['sort_order'])) {
-            $existingCategory->setSortOrder($data['sort_order']);
+        // 6. Trouver la catégorie au-dessus
+        $previousCategory = $this->menuCategoryRepository->findPreviousCategoryInMenu(
+            $currentCategory->getMenuId(),
+            $currentCategory->getSortOrder()
+        );
+
+        if (!$previousCategory) {
+            throw new \Exception("Category is already at the top.");
         }
 
-        // 7. Sauvegarde
-        return $this->menuCategoryRepository->update($existingCategory);
+        // 7. Échanger les positions
+        $currentSortOrder = $currentCategory->getSortOrder();
+        $previousSortOrder = $previousCategory->getSortOrder();
+
+        $currentCategory->setSortOrder($previousSortOrder);
+        $previousCategory->setSortOrder($currentSortOrder);
+
+        // 8. Sauvegarder les changements
+        $this->menuCategoryRepository->update($previousCategory);
+        return $this->menuCategoryRepository->update($currentCategory);
     }
-}
+} 

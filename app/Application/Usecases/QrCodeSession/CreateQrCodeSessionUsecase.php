@@ -9,6 +9,8 @@ use App\Domain\Repositories\QrCodeRepositoryInterface;
 
 class CreateQrCodeSessionUsecase
 {
+    private const DUPLICATE_CHECK_SECONDS = 120; // 2 minutes en secondes
+
     public function __construct(
         private QrCodeSessionRepositoryInterface $qrCodeSessionRepository,
         private QrCodeRepositoryInterface $qrCodeRepository
@@ -28,7 +30,7 @@ class CreateQrCodeSessionUsecase
             qrCodeId: $data['qr_code_id'],
             ipAddress: $data['ip_address'],
             userAgent: $data['user_agent'],
-            minutes: 2
+            seconds: self::DUPLICATE_CHECK_SECONDS
         );
 
         // Si une session récente existe, la retourner

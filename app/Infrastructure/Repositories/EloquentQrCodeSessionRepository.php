@@ -29,12 +29,14 @@ class EloquentQrCodeSessionRepository implements QrCodeSessionRepositoryInterfac
         return $this->toDomainEntity($model);
     }
 
-    public function findRecentByAttributes(string $qrCodeId, string $ipAddress, string $userAgent, int $minutes): ?QrCodeSession
+    public function findRecentByAttributes(string $qrCodeId, string $ipAddress, string $userAgent, int $seconds): ?QrCodeSession
     {
+        $recentTime = now()->subSeconds($seconds);
+        
         $model = QrCodeSessionModel::where('qr_code_id', $qrCodeId)
             ->where('ip_address', $ipAddress)
             ->where('user_agent', $userAgent)
-            ->where('created_at', '>=', now()->subMinutes($minutes))
+            ->where('created_at', '>=', $recentTime)
             ->first();
 
         return $model ? $this->toDomainEntity($model) : null;

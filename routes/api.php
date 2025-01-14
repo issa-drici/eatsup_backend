@@ -27,6 +27,12 @@ use App\Http\Controllers\MenuItem\DeleteMenuItemByIdController;
 use App\Http\Controllers\MenuCategory\DeleteMenuCategoryByIdController;
 use App\Http\Controllers\QrCodeSession\CountQrCodeSessionsByRestaurantIdController;
 use App\Http\Controllers\QrCodeSession\CreateQrCodeSessionController;
+use App\Http\Controllers\MenuItem\UpdateMenuItemController;
+use App\Http\Controllers\MenuItem\FindMenuItemByIdController;
+use App\Http\Controllers\MenuItem\UpdateMenuItemMoveUpController;
+use App\Http\Controllers\MenuItem\UpdateMenuItemMoveDownController;
+use App\Http\Controllers\MenuCategory\UpdateMenuCategoryMoveUpController;
+use App\Http\Controllers\MenuCategory\UpdateMenuCategoryMoveDownController;
 
 // Routes nécessitant l'authentification via Sanctum
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -87,6 +93,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         // Création d'un item dans une catégorie
         Route::post('/{menuCategoryId}/item/create', CreateMenuItemController::class)
             ->name('menu-items.create');
+
+        // Mise à jour d'une catégorie
+        Route::put('/{menuCategoryId}/update', UpdateMenuCategoryController::class)
+            ->name('menu-categories.update');
     });
 
     // Liste des restaurants sans QR code
@@ -120,6 +130,24 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/restaurant/{restaurantId}/qrCodeSessions/count', CountQrCodeSessionsByRestaurantIdController::class)
         ->name('qr-code-sessions.count-by-restaurant-id');
+
+    Route::put('/menuItem/{menuItemId}/update', UpdateMenuItemController::class)
+        ->name('menu-items.update');
+
+    Route::get('/menuItem/{menuItemId}', FindMenuItemByIdController::class)
+        ->name('menu-items.find-by-id');
+
+    Route::put('/menuItem/{menuItemId}/moveUp', UpdateMenuItemMoveUpController::class)
+        ->name('menu-items.move-up');
+
+    Route::put('/menuItem/{menuItemId}/moveDown', UpdateMenuItemMoveDownController::class)
+        ->name('menu-items.move-down');
+
+    Route::put('/menuCategory/{menuCategoryId}/moveUp', UpdateMenuCategoryMoveUpController::class)
+        ->name('menu-categories.move-up');
+        
+    Route::put('/menuCategory/{menuCategoryId}/moveDown', UpdateMenuCategoryMoveDownController::class)
+        ->name('menu-categories.move-down');
 });
 
 // Route publique pour les QR codes

@@ -13,4 +13,6 @@ interface MenuCategoryRepositoryInterface
     public function findAllByMenuId(string $menuId): array;
     public function getMaxSortOrderByMenuId(string $menuId): int;
     public function delete(string $id): void;
+    public function findPreviousCategoryInMenu(string $menuId, int $currentSortOrder): ?MenuCategory;
+    public function findNextCategoryInMenu(string $menuId, int $currentSortOrder): ?MenuCategory;
 }

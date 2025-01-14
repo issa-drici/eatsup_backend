@@ -76,6 +76,26 @@ class EloquentMenuCategoryRepository implements MenuCategoryRepositoryInterface
         $model->delete();
     }
 
+    public function findPreviousCategoryInMenu(string $menuId, int $currentSortOrder): ?MenuCategory
+    {
+        $model = MenuCategoryModel::where('menu_id', $menuId)
+            ->where('sort_order', '<', $currentSortOrder)
+            ->orderBy('sort_order', 'desc')
+            ->first();
+
+        return $model ? $this->toDomainEntity($model) : null;
+    }
+
+    public function findNextCategoryInMenu(string $menuId, int $currentSortOrder): ?MenuCategory
+    {
+        $model = MenuCategoryModel::where('menu_id', $menuId)
+            ->where('sort_order', '>', $currentSortOrder)
+            ->orderBy('sort_order', 'asc')
+            ->first();
+
+        return $model ? $this->toDomainEntity($model) : null;
+    }
+
     private function toDomainEntity(MenuCategoryModel $model): MenuCategory
     {
         return new MenuCategory(
