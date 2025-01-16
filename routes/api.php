@@ -33,6 +33,8 @@ use App\Http\Controllers\MenuItem\UpdateMenuItemMoveUpController;
 use App\Http\Controllers\MenuItem\UpdateMenuItemMoveDownController;
 use App\Http\Controllers\MenuCategory\UpdateMenuCategoryMoveUpController;
 use App\Http\Controllers\MenuCategory\UpdateMenuCategoryMoveDownController;
+use App\Http\Controllers\Restaurant\UpdateRestaurantController;
+use App\Http\Controllers\Menu\FindMenuByIdController;
 
 // Routes nécessitant l'authentification via Sanctum
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -148,6 +150,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         
     Route::put('/menuCategory/{menuCategoryId}/moveDown', UpdateMenuCategoryMoveDownController::class)
         ->name('menu-categories.move-down');
+
+    Route::post('/restaurant/{restaurantId}/update', UpdateRestaurantController::class)
+        ->name('restaurants.update');
+
+    Route::get('/menu/{menuId}', FindMenuByIdController::class)
+        ->name('menu.find-by-id');
 });
 
 // Route publique pour les QR codes

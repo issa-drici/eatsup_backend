@@ -14,4 +14,6 @@ interface RestaurantRepositoryInterface
     public function findAllWithOwners(): array;
     public function findAllWithOwnersPaginated(array $filters = [], int $page = 1, int $perPage = 10): array;
     public function findAllWithQrCodeCount(): array;
+    public function update(Restaurant $restaurant): Restaurant;
+    public function findById(string $id): ?Restaurant;
 }

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Domain\Repositories\FileRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 use App\Domain\Repositories\MenuCategoryRepositoryInterface;
 use App\Domain\Repositories\MenuItemRepositoryInterface;
@@ -15,6 +16,7 @@ use Illuminate\Auth\Notifications\ResetPassword;
 use App\Domain\Repositories\QrCodeRepositoryInterface;
 use App\Infrastructure\Repositories\EloquentQrCodeRepository;
 use App\Domain\Repositories\QrCodeSessionRepositoryInterface;
+use App\Infrastructure\Repositories\EloquentFileRepository;
 use App\Infrastructure\Repositories\EloquentQrCodeSessionRepository;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(RestaurantRepositoryInterface::class, EloquentRestaurantRepository::class);
         $this->app->bind(QrCodeRepositoryInterface::class, EloquentQrCodeRepository::class);
         $this->app->bind(QrCodeSessionRepositoryInterface::class, EloquentQrCodeSessionRepository::class);
+        $this->app->bind(FileRepositoryInterface::class, EloquentFileRepository::class);
     }
 
     /**
