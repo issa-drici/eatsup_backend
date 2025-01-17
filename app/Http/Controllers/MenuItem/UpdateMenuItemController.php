@@ -28,7 +28,11 @@ class UpdateMenuItemController extends Controller
             'price'      => 'sometimes|numeric',
             'allergens'  => 'nullable|array',
             'images'     => 'nullable|array',
-            'images.*'   => 'file|image|max:2048',
+            'images.*'   => [
+                'file',
+                'image',
+                'max:30720',
+            ],
             'remove_images' => 'nullable|array',
             'remove_images.*' => 'string|uuid',
             'sort_order' => 'nullable|integer',
