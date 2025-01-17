@@ -11,6 +11,7 @@ use App\Application\Usecases\File\DeleteFileUsecase;
 use App\Exceptions\UnauthorizedException;
 use App\Services\S3Service;
 use Illuminate\Support\Str;
+use App\Domain\Repositories\UserRepositoryInterface;
 
 class UpdateRestaurantUsecase
 {
@@ -18,7 +19,8 @@ class UpdateRestaurantUsecase
         private RestaurantRepositoryInterface $restaurantRepository,
         private CreateFileUsecase $createFileUsecase,
         private DeleteFileUsecase $deleteFileUsecase,
-        private S3Service $s3Service
+        private S3Service $s3Service,
+        private UserRepositoryInterface $userRepository
     ) {
     }
 
@@ -95,6 +97,20 @@ class UpdateRestaurantUsecase
                 // 5. Mettre à jour les autres champs
                 if (isset($data['name'])) {
                     $restaurant->setName($data['name']);
+                    
+                    // Mettre à jour le nom de l'utilisateur si c'est le propriétaire
+                    if ($restaurant->getOwnerId() === $user->id) {
+                        // Créer une entité User du domaine
+                        $userEntity = new \App\Domain\Entities\User(
+                            id: $user->id,
+                            name: $data['name'],
+                            email: $user->email,
+                            role: $user->role,
+                            userPlan: $user->user_plan,
+                            userSubscriptionStatus: $user->user_subscription_status
+                        );
+                        $this->userRepository->update($userEntity);
+                    }
                 }
                 if (isset($data['address'])) {
                     $restaurant->setAddress($data['address']);

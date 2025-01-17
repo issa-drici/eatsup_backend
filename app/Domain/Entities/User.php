@@ -9,8 +9,8 @@ class User
         private string $name,
         private string $email,
         private string $role,
-        private ?string $userPlan,
-        private ?string $userSubscriptionStatus
+        private string $userPlan,
+        private ?string $userSubscriptionStatus = null,
     ) {
     }
 
@@ -34,7 +34,7 @@ class User
         return $this->role;
     }
 
-    public function getUserPlan(): ?string
+    public function getUserPlan(): string
     {
         return $this->userPlan;
     }
