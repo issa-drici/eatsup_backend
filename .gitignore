@@ -22,3 +22,5 @@ yarn-error.log
 /.vscode
 /.zed
 deploy.sh
+.docker
+docker-compose.override.yml
