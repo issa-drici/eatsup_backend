@@ -133,7 +133,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/restaurant/{restaurantId}/qrCodeSessions/count', CountQrCodeSessionsByRestaurantIdController::class)
         ->name('qr-code-sessions.count-by-restaurant-id');
 
-    Route::put('/menuItem/{menuItemId}/update', UpdateMenuItemController::class)
+    Route::post('/menuItem/{menuItemId}/update', UpdateMenuItemController::class)
         ->name('menu-items.update');
 
     Route::get('/menuItem/{menuItemId}', FindMenuItemByIdController::class)

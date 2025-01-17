@@ -75,8 +75,8 @@ class EloquentMenuItemRepository implements MenuItemRepositoryInterface
     {
         $maxSortOrder = MenuItemModel::where('category_id', $categoryId)
             ->max('sort_order');
-
-        return $maxSortOrder ?? 0; // Retourne 0 si aucun item n'existe
+        
+        return $maxSortOrder ?? 0;
     }
 
     public function delete(string $id): void
