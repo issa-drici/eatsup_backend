@@ -35,6 +35,9 @@ use App\Http\Controllers\MenuCategory\UpdateMenuCategoryMoveUpController;
 use App\Http\Controllers\MenuCategory\UpdateMenuCategoryMoveDownController;
 use App\Http\Controllers\Restaurant\UpdateRestaurantController;
 use App\Http\Controllers\Menu\FindMenuByIdController;
+use App\Http\Controllers\Website\FindWebsiteByRestaurantIdController;
+use App\Http\Controllers\Website\UpdateWebsiteController;
+use App\Http\Controllers\Website\FindWebsiteByRestaurantIdPublicController;
 
 // Routes nécessitant l'authentification via Sanctum
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -156,6 +159,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/menu/{menuId}', FindMenuByIdController::class)
         ->name('menu.find-by-id');
+
+    Route::get('/restaurant/{restaurantId}/website', FindWebsiteByRestaurantIdController::class)
+        ->name('website.find-by-restaurant-id');
+
+    Route::post('/restaurant/{restaurantId}/website/update', UpdateWebsiteController::class)
+        ->name('website.update');
 });
 
 // Route publique pour les QR codes
@@ -169,3 +178,7 @@ Route::post('/qr-code/{qrCodeId}/qrCodeSession/create', CreateQrCodeSessionContr
 // Dans le groupe des routes publiques (en dehors du middleware auth:sanctum)
 Route::get('/menu/{menuId}/menuItems/groupedByCategoryName', FindAllMenuItemsByMenuIdGroupedByCategoryNameController::class)
     ->name('menu-items.grouped-by-category');
+
+// Route publique pour accéder au site web d'un restaurant
+Route::get('/public/restaurant/{restaurantId}/website', FindWebsiteByRestaurantIdPublicController::class)
+    ->name('website.public.find-by-restaurant-id');
