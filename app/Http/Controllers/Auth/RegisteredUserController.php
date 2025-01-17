@@ -14,7 +14,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-
+use Illuminate\Support\Str;
 class RegisteredUserController extends Controller
 {
     /**
@@ -47,6 +47,7 @@ class RegisteredUserController extends Controller
         $createRestaurantUsecase = app(CreateRestaurantUsecase::class);
         $restaurant = $createRestaurantUsecase->execute([
             'name' => $user->name,
+            'name_slug' => Str::slug($user->name),
             'owner_id' => $user->id
         ]);
 
@@ -63,6 +64,7 @@ class RegisteredUserController extends Controller
             'restaurant_id' => $restaurant->getId(),
             'title' => ['fr' => $user->name, 'en' => $user->name],
             'description' => ['fr' => 'Bienvenue sur notre site', 'en' => 'Welcome to our website'],
+            'menu_id' => $menu->getId(),
             'theme_config' => [
                 'colors' => [
                     'primary' => '#4F46E5',

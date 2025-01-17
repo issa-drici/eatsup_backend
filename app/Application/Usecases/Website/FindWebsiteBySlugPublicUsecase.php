@@ -7,7 +7,7 @@ use App\Domain\Repositories\RestaurantRepositoryInterface;
 use App\Domain\Repositories\FileRepositoryInterface;
 use App\Application\DTOs\WebsiteDTO;
 
-class FindWebsiteByRestaurantIdPublicUsecase
+class FindWebsiteBySlugPublicUsecase
 {
     public function __construct(
         private WebsiteRepositoryInterface $websiteRepository,
@@ -16,18 +16,17 @@ class FindWebsiteByRestaurantIdPublicUsecase
     ) {
     }
 
-    public function execute(string $restaurantId): WebsiteDTO
+    public function execute(string $typeSlug, string $citySlug, string $nameSlug): WebsiteDTO
     {
-        // 1. Récupérer le site web
-        $website = $this->websiteRepository->findByRestaurantId($restaurantId);
-        if (!$website) {
-            throw new \Exception("Website not found for this restaurant.");
-        }
-
-        // 2. Récupérer le restaurant
-        $restaurant = $this->restaurantRepository->findById($restaurantId);
+        // 1. Trouver le restaurant correspondant aux slugs
+        $restaurant = $this->restaurantRepository->findBySlug($typeSlug, $citySlug, $nameSlug);
         if (!$restaurant) {
             throw new \Exception("Restaurant not found.");
+        }
+        // 2. Récupérer le site web
+        $website = $this->websiteRepository->findByRestaurantId($restaurant->getId());
+        if (!$website) {
+            throw new \Exception("Website not found for this restaurant.");
         }
 
         // 3. Récupérer l'image de présentation si elle existe
@@ -58,7 +57,7 @@ class FindWebsiteByRestaurantIdPublicUsecase
                 'address' => $restaurant->getAddress(),
                 'phone' => $restaurant->getPhone(),
                 'logo_id' => $restaurant->getLogoId(),
-            ]
+            ],
         );
     }
 } 

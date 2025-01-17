@@ -62,6 +62,7 @@ class EloquentWebsiteRepository implements WebsiteRepositoryInterface
         return new Website(
             id: $model->id,
             restaurantId: $model->restaurant_id,
+            menuId: $model->menu_id,
             title: $model->title,
             description: $model->description,
             themeConfig: $model->theme_config,

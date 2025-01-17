@@ -5,19 +5,16 @@ namespace App\Application\DTOs;
 class WebsiteDTO
 {
     public function __construct(
-        private string $id,
-        private string $restaurantId,
-        private ?string $domain,
-        private array $title,
-        private ?array $description,
-        private ?array $presentationImage,
-        private ?array $openingHours,
-        private ?array $themeConfig,
-        // Restaurant info
-        private string $restaurantName,
-        private ?string $restaurantAddress,
-        private ?string $restaurantPhone,
-        private ?string $restaurantLogoId,
+        public string $id,
+        public string $restaurantId,
+        public ?string $menuId,
+        public ?string $domain,
+        public ?array $title,
+        public ?array $description,
+        public ?array $presentationImage,
+        public ?array $openingHours,
+        public ?array $themeConfig,
+        public array $restaurant = [],
     ) {
     }
 
@@ -25,10 +22,15 @@ class WebsiteDTO
     {
         return $this->id;
     }
-
+    
     public function getRestaurantId(): string
     {
         return $this->restaurantId;
+    }
+
+    public function getMenuId(): ?string
+    {
+        return $this->menuId;
     }
 
     public function getDomain(): ?string
@@ -61,24 +63,9 @@ class WebsiteDTO
         return $this->themeConfig;
     }
 
-    public function getRestaurantName(): string
+    public function getRestaurant(): array
     {
-        return $this->restaurantName;
-    }
-
-    public function getRestaurantAddress(): ?string
-    {
-        return $this->restaurantAddress;
-    }
-
-    public function getRestaurantPhone(): ?string
-    {
-        return $this->restaurantPhone;
-    }
-
-    public function getRestaurantLogoId(): ?string
-    {
-        return $this->restaurantLogoId;
+        return $this->restaurant;
     }
 
     public function toArray(): array
@@ -86,18 +73,14 @@ class WebsiteDTO
         return [
             'id' => $this->id,
             'restaurant_id' => $this->restaurantId,
+            'menu_id' => $this->menuId,
             'domain' => $this->domain,
             'title' => $this->title,
             'description' => $this->description,
             'presentation_image' => $this->presentationImage,
             'opening_hours' => $this->openingHours,
             'theme_config' => $this->themeConfig,
-            'restaurant' => [
-                'name' => $this->restaurantName,
-                'address' => $this->restaurantAddress,
-                'phone' => $this->restaurantPhone,
-                'logo_id' => $this->restaurantLogoId,
-            ],
+            'restaurant' => $this->restaurant,
         ];
     }
 } 

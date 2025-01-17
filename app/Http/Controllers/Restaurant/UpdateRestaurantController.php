@@ -18,6 +18,11 @@ class UpdateRestaurantController extends Controller
         $data = $request->validate([
             'name' => 'sometimes|string|max:255',
             'address' => 'sometimes|nullable|string|max:255',
+            'postal_code' => 'sometimes|nullable|string|max:10',
+            'city' => 'sometimes|nullable|string|max:255',
+            'city_slug' => 'sometimes|nullable|string|max:255',
+            'name_slug' => 'sometimes|nullable|string|max:255',
+            'type_slug' => 'sometimes|nullable|string|max:255',
             'phone' => 'sometimes|nullable|string|max:50',
             'logo' => 'sometimes|nullable|file|image|max:2048',
             'logo_url' => 'sometimes|nullable|string',

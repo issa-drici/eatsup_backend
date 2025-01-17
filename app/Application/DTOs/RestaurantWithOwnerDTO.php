@@ -12,6 +12,11 @@ class RestaurantWithOwnerDTO
         public ?array $logo,
         public ?array $social_links,
         public ?array $google_info,
+        public ?string $postal_code,
+        public ?string $city,
+        public ?string $city_slug,
+        public ?string $type_slug,
+        public ?string $name_slug,
         public array $owner
     ) {
     }
@@ -22,6 +27,11 @@ class RestaurantWithOwnerDTO
             id: $restaurant->getId(),
             name: $restaurant->getName(),
             address: $restaurant->getAddress(),
+            postal_code: $restaurant->getPostalCode(),
+            city: $restaurant->getCity(),
+            city_slug: $restaurant->getCitySlug(),
+            type_slug: $restaurant->getTypeSlug(),
+            name_slug: $restaurant->getNameSlug(),
             phone: $restaurant->getPhone(),
             logo: $file ? [
                 'id' => $file->getId(),

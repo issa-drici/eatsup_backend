@@ -13,14 +13,14 @@ class RestaurantFactory extends Factory
     public function definition(): array
     {
         return [
-            'id' => Str::uuid()->toString(),
-            'owner_id' => Str::uuid()->toString(),
-            'name' => 'Sample Restaurant',
-            'address' => '123 Sample St.',
-            'phone' => '1234567890',
-            'logo_url' => null,
-            'social_links' => null,
-            'google_info' => null,
+            'name' => fake()->company(),
+            'name_slug' => Str::slug(fake()->company()),
+            'address' => fake()->address(),
+            'postal_code' => fake()->postcode(),
+            'city' => fake()->city(),
+            'city_slug' => Str::slug(fake()->city()),
+            'type_slug' => fake()->randomElement(['restaurant', 'cafe', 'bar', 'bistrot']),
+            'phone' => fake()->phoneNumber(),
         ];
     }
 }

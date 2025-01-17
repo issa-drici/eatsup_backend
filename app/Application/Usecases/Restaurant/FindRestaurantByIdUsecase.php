@@ -21,6 +21,7 @@ class FindRestaurantByIdUsecase
         if (!$user) {
             throw new UnauthorizedException("User not authenticated.");
         }
+
         // 2. Vérifier les permissions selon le rôle
         if (!in_array($user->role, ['admin', 'restaurant_owner', 'franchise_manager'])) {
             throw new UnauthorizedException("You do not have access to this restaurant.");
@@ -31,7 +32,6 @@ class FindRestaurantByIdUsecase
             $userRestaurant = $this->restaurantRepository->findByOwnerId($user->id);
 
             if (!$userRestaurant || $userRestaurant->getId() !== $restaurantId) {
-                dd($userRestaurant , $userRestaurant->getId() , $restaurantId);
                 throw new UnauthorizedException("You do not have access to this restaurant.");
             }
         }
@@ -41,8 +41,7 @@ class FindRestaurantByIdUsecase
         if (!$restaurantWithOwner) {
             throw new \Exception("Restaurant not found.");
         }
-
-        // Le repository retourne déjà un RestaurantWithOwnerDTO, on peut le retourner directement
+        
         return $restaurantWithOwner;
     }
 } 

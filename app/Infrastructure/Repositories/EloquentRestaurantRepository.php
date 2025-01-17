@@ -21,6 +21,11 @@ class EloquentRestaurantRepository implements RestaurantRepositoryInterface
             'owner_id'    => $restaurant->getOwnerId(),
             'name'        => $restaurant->getName(),
             'address'     => $restaurant->getAddress(),
+            'postal_code' => $restaurant->getPostalCode(),
+            'city'        => $restaurant->getCity(),
+            'city_slug'   => $restaurant->getCitySlug(),
+            'name_slug'   => $restaurant->getNameSlug(),
+            'type_slug'   => $restaurant->getTypeSlug(),
             'phone'       => $restaurant->getPhone(),
         ]);
         return $this->toDomainEntity($model);
@@ -38,6 +43,11 @@ class EloquentRestaurantRepository implements RestaurantRepositoryInterface
             ownerId: $model->owner_id,
             name: $model->name,
             address: $model->address,
+            postalCode: $model->postal_code,
+            city: $model->city,
+            citySlug: $model->city_slug,
+            typeSlug: $model->type_slug,
+            nameSlug: $model->name_slug,
             phone: $model->phone
         );
     }
@@ -312,10 +322,15 @@ class EloquentRestaurantRepository implements RestaurantRepositoryInterface
     public function update(Restaurant $restaurant): Restaurant
     {
         $model = RestaurantModel::findOrFail($restaurant->getId());
-        
+
         $model->update([
             'name' => $restaurant->getName(),
             'address' => $restaurant->getAddress(),
+            'postal_code' => $restaurant->getPostalCode(),
+            'city' => $restaurant->getCity(),
+            'city_slug' => $restaurant->getCitySlug(),
+            'name_slug' => $restaurant->getNameSlug(),
+            'type_slug' => $restaurant->getTypeSlug(),
             'phone' => $restaurant->getPhone(),
             'logo_id' => $restaurant->getLogoId(),
             'social_links' => $restaurant->getSocialLinks(),
@@ -328,11 +343,25 @@ class EloquentRestaurantRepository implements RestaurantRepositoryInterface
     public function findById(string $id): ?Restaurant
     {
         $model = RestaurantModel::find($id);
-        
+
         if (!$model) {
             return null;
         }
-        
+
+        return $this->toDomainEntity($model);
+    }
+
+    public function findBySlug(string $typeSlug, string $citySlug, string $nameSlug): ?Restaurant
+    {
+        $model = RestaurantModel::where('type_slug', $typeSlug)
+            ->where('city_slug', $citySlug)
+            ->where('name_slug', $nameSlug)
+            ->first();
+
+        if (!$model) {
+            return null;
+        }
+
         return $this->toDomainEntity($model);
     }
 
@@ -343,6 +372,11 @@ class EloquentRestaurantRepository implements RestaurantRepositoryInterface
             ownerId: $model->owner_id,
             name: $model->name,
             address: $model->address,
+            city: $model->city,
+            citySlug: $model->city_slug,
+            nameSlug: $model->name_slug,
+            typeSlug: $model->type_slug,
+            postalCode: $model->postal_code,
             phone: $model->phone,
             logoId: $model->logo_id,
             socialLinks: $model->social_links,

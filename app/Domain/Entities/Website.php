@@ -7,12 +7,13 @@ class Website
     public function __construct(
         private string $id,
         private string $restaurantId,
-        private array $title,
-        private ?array $description,
-        private ?array $themeConfig,
-        private ?string $domain,
-        private ?string $presentationImageId,
-        private ?array $openingHours,
+        private ?string $menuId = null,
+        private ?string $domain = null,
+        private ?array $title = null,
+        private ?array $description = null,
+        private ?string $presentationImageId = null,
+        private ?array $openingHours = null,
+        private ?array $themeConfig = null,
     ) {
     }
 
@@ -84,5 +85,15 @@ class Website
     public function setOpeningHours(?array $openingHours): void
     {
         $this->openingHours = $openingHours;
+    }
+
+    public function getMenuId(): ?string
+    {
+        return $this->menuId;
+    }
+
+    public function setMenuId(?string $menuId): void
+    {
+        $this->menuId = $menuId;
     }
 } 

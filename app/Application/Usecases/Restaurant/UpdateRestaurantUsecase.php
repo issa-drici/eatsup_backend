@@ -111,9 +111,22 @@ class UpdateRestaurantUsecase
                         );
                         $this->userRepository->update($userEntity);
                     }
+
+                    $restaurant->setNameSlug(Str::slug($data['name']));
                 }
                 if (isset($data['address'])) {
                     $restaurant->setAddress($data['address']);
+                }
+                if (isset($data['postal_code'])) {
+                    $restaurant->setPostalCode($data['postal_code']);
+                }
+                if (isset($data['city'])) {
+                    $restaurant->setCity($data['city']);
+                    // Générer automatiquement le city_slug à partir de la ville
+                    $restaurant->setCitySlug(Str::slug($data['city']));
+                }
+                if (isset($data['type_slug'])) {
+                    $restaurant->setTypeSlug($data['type_slug']);
                 }
                 if (isset($data['phone'])) {
                     $restaurant->setPhone($data['phone']);

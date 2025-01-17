@@ -16,4 +16,5 @@ interface RestaurantRepositoryInterface
     public function findAllWithQrCodeCount(): array;
     public function update(Restaurant $restaurant): Restaurant;
     public function findById(string $id): ?Restaurant;
+    public function findBySlug(string $typeSlug, string $citySlug, string $nameSlug): ?Restaurant;
 }

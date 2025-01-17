@@ -15,8 +15,7 @@ class FindWebsiteByRestaurantIdUsecase
         private WebsiteRepositoryInterface $websiteRepository,
         private RestaurantRepositoryInterface $restaurantRepository,
         private FileRepositoryInterface $fileRepository
-    ) {
-    }
+    ) {}
 
     public function execute(string $restaurantId): WebsiteDTO
     {
@@ -33,7 +32,6 @@ class FindWebsiteByRestaurantIdUsecase
                 throw new UnauthorizedException("You do not have permission to view this website.");
             }
         }
-
         // 3. Récupérer le site web
         $website = $this->websiteRepository->findByRestaurantId($restaurantId);
         if (!$website) {
@@ -55,16 +53,19 @@ class FindWebsiteByRestaurantIdUsecase
         return new WebsiteDTO(
             id: $website->getId(),
             restaurantId: $website->getRestaurantId(),
+            menuId: $website->getMenuId(),
             domain: $website->getDomain(),
             title: $website->getTitle(),
             description: $website->getDescription(),
             presentationImage: $presentationImage,
             openingHours: $website->getOpeningHours(),
             themeConfig: $website->getThemeConfig(),
-            restaurantName: '',
-            restaurantAddress: null,
-            restaurantPhone: null,
-            restaurantLogoId: null
+            restaurant: [
+                'name' => $restaurant->getName(),
+                'address' => $restaurant->getAddress(),
+                'phone' => $restaurant->getPhone(),
+                'logo_id' => $restaurant->getLogoId(),
+            ],
         );
     }
-} 
+}

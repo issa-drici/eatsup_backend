@@ -24,6 +24,11 @@ class FindRestaurantByIdController extends Controller
                 'address' => $restaurant->address,
                 'phone' => $restaurant->phone,
                 'logo' => $restaurant->logo,
+                'postal_code' => $restaurant->postal_code,
+                'city' => $restaurant->city,
+                'city_slug' => $restaurant->city_slug,
+                'name_slug' => $restaurant->name_slug,
+                'type_slug' => $restaurant->type_slug,
                 'social_links' => $restaurant->social_links,
                 'google_info' => $restaurant->google_info,
                 'owner' => $restaurant->owner
