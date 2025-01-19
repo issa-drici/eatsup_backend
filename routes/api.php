@@ -35,6 +35,7 @@ use App\Http\Controllers\MenuCategory\UpdateMenuCategoryMoveUpController;
 use App\Http\Controllers\MenuCategory\UpdateMenuCategoryMoveDownController;
 use App\Http\Controllers\Restaurant\UpdateRestaurantController;
 use App\Http\Controllers\Menu\FindMenuByIdController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\Website\FindWebsiteByRestaurantIdController;
 use App\Http\Controllers\Website\UpdateWebsiteController;
 use App\Http\Controllers\Website\FindWebsiteByRestaurantIdPublicController;
@@ -151,7 +152,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::put('/menuCategory/{menuCategoryId}/moveUp', UpdateMenuCategoryMoveUpController::class)
         ->name('menu-categories.move-up');
-        
+
     Route::put('/menuCategory/{menuCategoryId}/moveDown', UpdateMenuCategoryMoveDownController::class)
         ->name('menu-categories.move-down');
 
@@ -166,6 +167,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/restaurant/{restaurantId}/website/update', UpdateWebsiteController::class)
         ->name('website.update');
+
+    // Routes d'abonnement
+    Route::post('/subscribe', [SubscriptionController::class, 'subscribe']);
+    Route::post('/cancel-subscription', [SubscriptionController::class, 'cancel']);
+    Route::get('/subscription/plans', [SubscriptionController::class, 'getPlans']);
 });
 
 // Route publique pour les QR codes
