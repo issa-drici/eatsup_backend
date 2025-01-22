@@ -37,7 +37,7 @@ class RegisteredUserController extends Controller
             'user_plan' => ['required', 'string', 'in:basic,premium,elite'],
         ]);
         $user = User::create([
-            'name' => $request->name,
+            'name' => ucwords($request->name),
             'email' => $request->email,
             'password' => Hash::make($request->string('password')),
             'user_plan' => 'premium',
@@ -53,7 +53,7 @@ class RegisteredUserController extends Controller
         // Création du restaurant
         $createRestaurantUsecase = app(CreateRestaurantUsecase::class);
         $restaurant = $createRestaurantUsecase->execute([
-            'name' => $user->name,
+            'name' => ucwords($user->name),
             'name_slug' => Str::slug($user->name),
             'owner_id' => $user->id
         ]);
@@ -69,7 +69,7 @@ class RegisteredUserController extends Controller
         $createWebsiteUsecase = app(CreateWebsiteUsecase::class);
         $website = $createWebsiteUsecase->execute([
             'restaurant_id' => $restaurant->getId(),
-            'title' => ['fr' => $user->name, 'en' => $user->name],
+            'title' => ['fr' => ucwords($user->name), 'en' => ucwords($user->name)],
             'description' => ['fr' => 'Bienvenue sur notre site', 'en' => 'Welcome to our website'],
             'menu_id' => $menu->getId(),
             'theme_config' => [

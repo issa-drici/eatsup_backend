@@ -28,6 +28,7 @@ class CreateWebsiteUsecase
         $website = new Website(
             id: Str::uuid()->toString(),
             restaurantId: $data['restaurant_id'],
+            menuId: $data['menu_id'],
             title: $data['title'],
             description: $data['description'],
             themeConfig: $data['theme_config'],

@@ -13,6 +13,7 @@ class EloquentWebsiteRepository implements WebsiteRepositoryInterface
         $model = WebsiteModel::create([
             'id' => $website->getId(),
             'restaurant_id' => $website->getRestaurantId(),
+            'menu_id' => $website->getMenuId(),
             'domain' => $website->getDomain(),
             'title' => $website->getTitle(),
             'description' => $website->getDescription(),

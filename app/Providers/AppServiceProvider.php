@@ -21,7 +21,9 @@ use App\Infrastructure\Repositories\EloquentQrCodeSessionRepository;
 use App\Domain\Repositories\UserRepositoryInterface;
 use App\Infrastructure\Repositories\EloquentUserRepository;
 use App\Domain\Repositories\WebsiteRepositoryInterface;
+use App\Domain\Repositories\WebsiteSessionRepositoryInterface;
 use App\Infrastructure\Repositories\EloquentWebsiteRepository;
+use App\Infrastructure\Repositories\EloquentWebsiteSessionRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(FileRepositoryInterface::class, EloquentFileRepository::class);
         $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
         $this->app->bind(WebsiteRepositoryInterface::class, EloquentWebsiteRepository::class);
+        $this->app->bind(WebsiteSessionRepositoryInterface::class, EloquentWebsiteSessionRepository::class);
     }
 
     /**

@@ -5,8 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 // Import de tes controllers
 use App\Http\Controllers\Menu\FindAllMenusByRestaurantIdController;
-
-
+use App\Http\Controllers\Menu\FindFirstMenuByRestaurantIdController;
 use App\Http\Controllers\MenuCategory\CountMenuCategoriesByMenuIdController;
 use App\Http\Controllers\MenuCategory\CreateMenuCategoryController;
 use App\Http\Controllers\MenuCategory\FindAllMenuCategoriesByMenuIdController;
@@ -38,9 +37,10 @@ use App\Http\Controllers\Menu\FindMenuByIdController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\Website\FindWebsiteByRestaurantIdController;
 use App\Http\Controllers\Website\UpdateWebsiteController;
-use App\Http\Controllers\Website\FindWebsiteByRestaurantIdPublicController;
 use App\Http\Controllers\Website\FindWebsiteBySlugPublicController;
 use App\Http\Controllers\Menu\UpdateMenuController;
+use App\Http\Controllers\WebsiteSession\CountWebsiteSessionsByRestaurantIdController;
+use App\Http\Controllers\WebsiteSession\CreateWebsiteSessionController;
 
 // Routes nécessitant l'authentification via Sanctum
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -169,6 +169,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/restaurant/{restaurantId}/website/update', UpdateWebsiteController::class)
         ->name('website.update');
 
+    Route::get('/restaurant/{restaurantId}/websiteSessions/count', CountWebsiteSessionsByRestaurantIdController::class)
+        ->name('website-sessions.count');
     // Routes d'abonnement
     Route::post('/subscribe', [SubscriptionController::class, 'subscribe']);
     Route::post('/cancel-subscription', [SubscriptionController::class, 'cancel']);
@@ -189,6 +191,14 @@ Route::post('/qr-code/{qrCodeId}/qrCodeSession/create', CreateQrCodeSessionContr
 Route::get('/menu/{menuId}/menuItems/groupedByCategoryName', FindAllMenuItemsByMenuIdGroupedByCategoryNameController::class)
     ->name('menu-items.grouped-by-category');
 
+// Dans le groupe des routes publiques (en dehors du middleware auth:sanctum)
+Route::get('/public/restaurant/{restaurantId}/menu/first', FindFirstMenuByRestaurantIdController::class)
+    ->name('menu.find-first-by-restaurant-id');
+
 // Route publique pour accéder au site web d'un restaurant
 Route::get('/public/type/{typeSlug}/ville/{citySlug}/name/{nameSlug}/website', FindWebsiteBySlugPublicController::class)
     ->name('website.public.find-by-slug');
+
+// Route publique pour créer une session website
+Route::post('/website/{websiteId}/websiteSession/create', CreateWebsiteSessionController::class)
+    ->name('website-sessions.create');
