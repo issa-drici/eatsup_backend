@@ -20,11 +20,12 @@ class MenuModel extends Model
         'restaurant_id',
         'name',
         'status',
-        'banner',
+        'banners',
     ];
 
     protected $casts = [
         'name' => 'json',
+        'banners' => 'json',
     ];
 
     public function restaurant()

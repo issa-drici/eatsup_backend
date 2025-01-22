@@ -49,7 +49,7 @@ class FindAllMenusByRestaurantIdUsecase
                 'id'       => $menu->getId(),
                 'name'     => $menu->getName(),
                 'status'   => $menu->getStatus(),
-                'banner'   => $menu->getBanner(),
+                'banners'   => $menu->getBanners(),
             ];
         }, $menus);
     }

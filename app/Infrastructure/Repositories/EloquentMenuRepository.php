@@ -11,14 +11,27 @@ class EloquentMenuRepository implements MenuRepositoryInterface
 
     public function create(Menu $menu): Menu
     {
-        $model = MenuModel::create([
-            'id'          => $menu->getId(),
-            'restaurant_id'    => $menu->getRestaurantId(),
-            'name'        => $menu->getName(),
-            'status'     => $menu->getStatus(),
-            'banner'     => $menu->getBanner(), 
+        $menuModel = MenuModel::create([
+            'id' => $menu->getId(),
+            'restaurant_id' => $menu->getRestaurantId(),
+            'name' => $menu->getName(),
+            'status' => $menu->getStatus(),
+            'banners' => $menu->getBanners(),
         ]);
-        return $this->toDomainEntity($model);
+
+        return $this->toDomainEntity($menuModel);
+    }
+
+    public function update(Menu $menu): Menu
+    {
+        $menuModel = MenuModel::findOrFail($menu->getId());
+        
+        $menuModel->update([
+            'name' => $menu->getName(),
+            'status' => $menu->getStatus(),
+            'banners' => $menu->getBanners(),
+        ]);
+        return $this->toDomainEntity($menuModel);
     }
 
     public function findById(string $id): ?Menu
@@ -39,7 +52,11 @@ class EloquentMenuRepository implements MenuRepositoryInterface
             return $this->toDomainEntity($model);
         })->toArray();
     }
-    
+
+    public function delete(string $id): void
+    {
+        MenuModel::findOrFail($id)->delete();
+    }
 
     private function toDomainEntity(MenuModel $model): Menu
     {
@@ -48,7 +65,7 @@ class EloquentMenuRepository implements MenuRepositoryInterface
             restaurantId: $model->restaurant_id,
             name: $model->name,
             status: $model->status,
-            banner: $model->banner
+            banners: $model->banners
         );
     }
 }

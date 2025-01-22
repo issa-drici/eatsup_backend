@@ -8,20 +8,20 @@ class Menu
     private string $restaurantId;
     private array $name;           // ex: { "fr": "Menu Principal", "en": "Main Menu" }
     private string $status;        // ex: 'draft', 'active'
-    private ?array $banner;        // ex: { "image_url": "...", "link": "...", "text": "Promo" }
+    private ?array $banners;        // [{ "id": "uuid", "url": "..." }, ...]
 
     public function __construct(
         string $id,
         string $restaurantId,
         array $name,
         string $status,
-        ?array $banner = null
+        ?array $banners = null
     ) {
         $this->id = $id;
         $this->restaurantId = $restaurantId;
         $this->name = $name;
         $this->status = $status;
-        $this->banner = $banner;
+        $this->banners = $banners;
     }
 
     public function getId(): string
@@ -44,9 +44,9 @@ class Menu
         return $this->status;
     }
 
-    public function getBanner(): ?array
+    public function getBanners(): ?array
     {
-        return $this->banner;
+        return $this->banners;
     }
 
     public function setName(array $name): void
@@ -59,8 +59,8 @@ class Menu
         $this->status = $status;
     }
 
-    public function setBanner(?array $banner): void
+    public function setBanners(?array $banners): void
     {
-        $this->banner = $banner;
+        $this->banners = $banners;
     }
 }

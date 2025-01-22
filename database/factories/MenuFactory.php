@@ -17,7 +17,7 @@ class MenuFactory extends Factory
             'restaurant_id' => Str::uuid()->toString(),
             'name' => ['en' => 'Sample Menu', 'fr' => 'Menu Exemple'],
             'status' => 'active',
-            'banner' => null,
+            'banners' => null,
         ];
     }
 }

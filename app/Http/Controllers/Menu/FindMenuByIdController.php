@@ -23,7 +23,7 @@ class FindMenuByIdController extends Controller
                 'restaurant_id' => $menu->getRestaurantId(),
                 'name'     => $menu->getName(),
                 'status'   => $menu->getStatus(),
-                'banner'   => $menu->getBanner(),
+                'banners'   => $menu->getBanners(),
             ]
         ]);
     }
