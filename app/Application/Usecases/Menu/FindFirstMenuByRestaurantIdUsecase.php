@@ -26,7 +26,7 @@ class FindFirstMenuByRestaurantIdUsecase
             throw new \Exception("No menu found for this restaurant.");
         }
 
-        // 3. Retourner le premier menu
+        // 3. Retourner le premier men
         return $menus[0];
     }
 } 
