@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\Discord\DiscordNotification;
 use Illuminate\Http\Request;
 use Laravel\Cashier\Exceptions\IncompletePayment;
 use Carbon\Carbon;
@@ -11,7 +12,7 @@ class SubscriptionController extends Controller
     public function subscribe(Request $request)
     {
         $user = $request->user();
-        
+
         try {
             // Créer ou récupérer le client Stripe
             $user->createOrGetStripeCustomer();
@@ -19,7 +20,7 @@ class SubscriptionController extends Controller
             // Souscrire au plan premium
             $subscription = $user->newSubscription('default', env('STRIPE_PREMIUM_PRICE_ID'))
                 ->create($request->payment_method_id);
-            
+
             // Mettre à jour le statut de l'utilisateur et les dates
             $user->update([
                 'user_plan' => 'premium',
@@ -29,12 +30,14 @@ class SubscriptionController extends Controller
                 // 'stripe_user_customer_id' => $stripeCustomer->id,
                 'stripe_user_subscription_id' => $subscription->id
             ]);
-            
+
+            // Envoyer une notification Discord
+            DiscordNotification::send('ventes', "Nouvelle vente : {$user->name} ({$user->email})");
+
             return response()->json([
                 'message' => 'Subscription successful',
                 'subscription' => $subscription
             ]);
-            
         } catch (IncompletePayment $exception) {
             return response()->json([
                 'error' => 'Payment incomplete',
@@ -46,15 +49,15 @@ class SubscriptionController extends Controller
     public function cancel(Request $request)
     {
         $user = $request->user();
-        
+
         // Annuler l'abonnement à la fin de la période
         $user->subscription('default')->cancel();
-        
+
         // Mettre à jour le statut
         $user->update([
             'user_subscription_status' => 'canceled'
         ]);
-        
+
         return response()->json([
             'message' => 'Subscription canceled'
         ]);
@@ -74,4 +77,4 @@ class SubscriptionController extends Controller
             ], 500);
         }
     }
-} 
+}

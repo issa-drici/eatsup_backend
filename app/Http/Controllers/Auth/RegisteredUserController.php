@@ -20,6 +20,7 @@ use Illuminate\Support\Str;
 use App\Mail\WelcomeTrialStarted;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
+use App\Services\Discord\DiscordNotification;
 
 class RegisteredUserController extends Controller
 {
@@ -45,9 +46,9 @@ class RegisteredUserController extends Controller
             'trial_ends_at' => Carbon::now()->addDays(30),
             'email_verified_at' => '2000-01-01 00:00:00',
         ]);
-        
+
         event(new Registered($user));
-        
+
         Auth::login($user);
 
         // Création du restaurant
@@ -82,7 +83,10 @@ class RegisteredUserController extends Controller
 
         // Envoyer le mail de bienvenue
         Mail::to($user->email)->send(new WelcomeTrialStarted($user));
-        
+
+        // Envoyer une notification Discord
+        DiscordNotification::send('inscriptions', "Nouvel utilisateur inscrit : {$user->name} ({$user->email})");
+
         // Enregistrer l'envoi du mail
         EmailNotificationModel::create([
             'user_id' => $user->id,
