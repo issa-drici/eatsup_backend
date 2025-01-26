@@ -9,8 +9,7 @@ class CountQrCodeSessionsByRestaurantIdController extends Controller
 {
     public function __construct(
         private CountQrCodeSessionsByRestaurantIdUsecase $countQrCodeSessionsByRestaurantIdUsecase
-    ) {
-    }
+    ) {}
 
     public function __invoke(string $restaurantId)
     {
@@ -23,4 +22,4 @@ class CountQrCodeSessionsByRestaurantIdController extends Controller
             ]
         ]);
     }
-} 
+}
