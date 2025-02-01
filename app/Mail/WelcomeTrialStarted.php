@@ -18,6 +18,7 @@ class WelcomeTrialStarted extends Mailable
             ->subject('Bienvenue sur EatsUp !')
             ->with([
                 'userName' => $this->user->name,
+                'trialStartDate' => Carbon::now()->format('d/m/Y'),
                 'trialEndDate' => Carbon::parse($this->user->trial_ends_at)->format('d/m/Y'),
                 'upgradeUrl' => config('app.frontend_url') . '/admin/subscription'
             ]);

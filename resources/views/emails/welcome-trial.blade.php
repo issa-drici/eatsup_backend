@@ -30,7 +30,7 @@
         <p>Pour bien démarrer, vous bénéficiez d'un accès Premium gratuit pendant 30 jours !</p>
         
         <ul>
-            <li>Date de début : aujourd'hui</li>
+            <li>Date de début : {{ $trialStartDate }}</li>
             <li>Date de fin : {{ $trialEndDate }}</li>
         </ul>
 
