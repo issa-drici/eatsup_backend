@@ -15,6 +15,7 @@ class CreateMenuItemController extends Controller
 
     public function __invoke(string $menuCategoryId, Request $request)
     {
+
         $data = $request->validate([
             'name'        => ['required', function ($attribute, $value, $fail) {
                 if ($value && !is_array(json_decode($value, true))) {
@@ -29,7 +30,7 @@ class CreateMenuItemController extends Controller
             'price'       => 'required|numeric|min:0',
             'allergens'   => 'nullable|string',
             'images'      => 'nullable|array',
-            'images.*'    => 'nullable|file|image|max:2048',
+            'images.*'    => 'nullable|file|image',
             'is_active'   => 'nullable|accepted|in:1,true,on,yes'
         ]);
 
