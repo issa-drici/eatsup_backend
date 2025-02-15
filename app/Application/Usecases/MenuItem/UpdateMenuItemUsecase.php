@@ -11,6 +11,7 @@ use App\Domain\Repositories\MenuRepositoryInterface;
 use App\Domain\Repositories\RestaurantRepositoryInterface;
 use App\Application\Usecases\File\CreateFileUsecase;
 use App\Application\Usecases\File\DeleteFileUsecase;
+use App\Application\Usecases\Translation\TranslateTextToMultipleLanguagesUsecase;
 use App\Exceptions\UnauthorizedException;
 use App\Services\S3Service;
 use Illuminate\Support\Str;
@@ -24,7 +25,8 @@ class UpdateMenuItemUsecase
         private RestaurantRepositoryInterface $restaurantRepository,
         private CreateFileUsecase $createFileUsecase,
         private DeleteFileUsecase $deleteFileUsecase,
-        private S3Service $s3Service
+        private S3Service $s3Service,
+        private TranslateTextToMultipleLanguagesUsecase $translateUsecase
     ) {}
 
     public function execute(string $menuItemId, array $data): MenuItem
@@ -101,16 +103,46 @@ class UpdateMenuItemUsecase
 
                 // 7. Mettre à jour les autres champs
                 if (isset($data['name'])) {
-                    $existingItem->setName($data['name']);
+                    // Vérifier si la valeur française a changé
+                    $currentName = $existingItem->getName();
+                    if (!isset($currentName['fr']) || $currentName['fr'] !== $data['name']['fr']) {
+                        $translatedName = $this->translateUsecase->execute($data['name']);
+                        $existingItem->setName($translatedName);
+                    } else {
+                        $existingItem->setName($data['name']);
+                    }
                 }
+
                 if (array_key_exists('description', $data)) {
-                    $existingItem->setDescription($data['description']);
+                    if ($data['description'] !== null) {
+                        $currentDescription = $existingItem->getDescription();
+                        if (!isset($currentDescription['fr']) || $currentDescription['fr'] !== $data['description']['fr']) {
+                            $translatedDescription = $this->translateUsecase->execute($data['description']);
+                            $existingItem->setDescription($translatedDescription);
+                        } else {
+                            $existingItem->setDescription($data['description']);
+                        }
+                    } else {
+                        $existingItem->setDescription(null);
+                    }
                 }
+
+                if (array_key_exists('allergens', $data)) {
+                    if ($data['allergens'] !== null) {
+                        $currentAllergens = $existingItem->getAllergens();
+                        if (!isset($currentAllergens['fr']) || $currentAllergens['fr'] !== $data['allergens']['fr']) {
+                            $translatedAllergens = $this->translateUsecase->execute($data['allergens']);
+                            $existingItem->setAllergens($translatedAllergens);
+                        } else {
+                            $existingItem->setAllergens($data['allergens']);
+                        }
+                    } else {
+                        $existingItem->setAllergens(null);
+                    }
+                }
+
                 if (isset($data['price'])) {
                     $existingItem->setPrice($data['price']);
-                }
-                if (array_key_exists('allergens', $data)) {
-                    $existingItem->setAllergens($data['allergens']);
                 }
                 if (isset($data['sort_order'])) {
                     $existingItem->setSortOrder($data['sort_order']);

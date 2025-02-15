@@ -29,7 +29,7 @@ class EloquentMenuItemRepository implements MenuItemRepositoryInterface
     public function update(MenuItem $menuItem): MenuItem
     {
         $model = MenuItemModel::findOrFail($menuItem->getId());
-        
+
         $model->update([
             'name' => $menuItem->getName(),
             'description' => $menuItem->getDescription(),
@@ -46,7 +46,7 @@ class EloquentMenuItemRepository implements MenuItemRepositoryInterface
     public function findById(string $id): ?MenuItem
     {
         $model = MenuItemModel::find($id);
-        
+
         if (!$model) {
             return null;
         }
@@ -67,7 +67,7 @@ class EloquentMenuItemRepository implements MenuItemRepositoryInterface
         $models = MenuItemModel::where('category_id', $menuCategoryId)
             ->orderBy('sort_order')
             ->get();
-            
+
         return $models->map(fn($model) => $this->toDomainEntity($model))->all();
     }
 
@@ -75,7 +75,7 @@ class EloquentMenuItemRepository implements MenuItemRepositoryInterface
     {
         $maxSortOrder = MenuItemModel::where('category_id', $categoryId)
             ->max('sort_order');
-        
+
         return $maxSortOrder ?? 0;
     }
 
@@ -124,4 +124,13 @@ class EloquentMenuItemRepository implements MenuItemRepositoryInterface
             sortOrder: $model->sort_order
         );
     }
+
+    public function countByRestaurantId(string $restaurantId): int
+{
+    return DB::table('menu_items')
+        ->join('menu_categories', 'menu_items.category_id', '=', 'menu_categories.id')
+        ->join('menus', 'menu_categories.menu_id', '=', 'menus.id')
+        ->where('menus.restaurant_id', $restaurantId)
+        ->count();
+}
 }

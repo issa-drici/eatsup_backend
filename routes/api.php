@@ -41,6 +41,7 @@ use App\Http\Controllers\Website\FindWebsiteBySlugPublicController;
 use App\Http\Controllers\Menu\UpdateMenuController;
 use App\Http\Controllers\WebsiteSession\CountWebsiteSessionsByRestaurantIdController;
 use App\Http\Controllers\WebsiteSession\CreateWebsiteSessionController;
+use App\Http\Controllers\Restaurant\FindMenuInfosHomeByRestaurantIdController;
 
 // Routes nécessitant l'authentification via Sanctum
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -177,6 +178,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/subscription/plans', [SubscriptionController::class, 'getPlans']);
 
     Route::post('/restaurant/{restaurantId}/menu/{menuId}/update', UpdateMenuController::class);
+
+    Route::get('/restaurant/{restaurantId}/menu-infos-home', FindMenuInfosHomeByRestaurantIdController::class)
+        ->name('restaurant.menu-infos-home');
 });
 
 // Route publique pour les QR codes

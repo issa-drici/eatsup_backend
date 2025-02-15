@@ -15,4 +15,5 @@ interface MenuCategoryRepositoryInterface
     public function delete(string $id): void;
     public function findPreviousCategoryInMenu(string $menuId, int $currentSortOrder): ?MenuCategory;
     public function findNextCategoryInMenu(string $menuId, int $currentSortOrder): ?MenuCategory;
+    public function countByRestaurantId(string $restaurantId): int;
 }

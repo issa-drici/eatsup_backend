@@ -16,4 +16,5 @@ interface MenuItemRepositoryInterface
     public function countByCategoryId(string $categoryId): int;
     public function findPreviousItemInCategory(string $categoryId, int $currentSortOrder): ?MenuItem;
     public function findNextItemInCategory(string $categoryId, int $currentSortOrder): ?MenuItem;
+    public function countByRestaurantId(string $restaurantId): int;
 }

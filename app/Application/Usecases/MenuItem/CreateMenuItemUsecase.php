@@ -11,6 +11,7 @@ use App\Domain\Repositories\MenuCategoryRepositoryInterface;
 use App\Domain\Repositories\MenuRepositoryInterface;
 use App\Domain\Repositories\RestaurantRepositoryInterface;
 use App\Application\Usecases\File\CreateFileUsecase;
+use App\Application\Usecases\Translation\TranslateTextToMultipleLanguagesUsecase;
 use App\Exceptions\UnauthorizedException;
 use App\Exceptions\PlanLimitException;
 
@@ -21,7 +22,8 @@ class CreateMenuItemUsecase
         private MenuCategoryRepositoryInterface $menuCategoryRepository,
         private MenuRepositoryInterface $menuRepository,
         private RestaurantRepositoryInterface $restaurantRepository,
-        private CreateFileUsecase $createFileUsecase
+        private CreateFileUsecase $createFileUsecase,
+        private TranslateTextToMultipleLanguagesUsecase $translateUsecase
     ) {
     }
 
@@ -85,14 +87,27 @@ class CreateMenuItemUsecase
             $maxSortOrder = $this->menuItemRepository->getMaxSortOrderByCategoryId($data['category_id']);
             $nextSortOrder = $maxSortOrder + 1;
 
+            // Traduire les champs multilingues
+            $translatedName = $this->translateUsecase->execute($data['name']);
+            $translatedDescription = null;
+            $translatedAllergens = null;
+
+            if (isset($data['description'])) {
+                $translatedDescription = $this->translateUsecase->execute($data['description']);
+            }
+
+            if (isset($data['allergens'])) {
+                $translatedAllergens = $this->translateUsecase->execute($data['allergens']);
+            }
+
             // 9. Créer l'entité
             $menuItem = new MenuItem(
                 id: Str::uuid()->toString(),
                 categoryId: $data['category_id'],
-                name: $data['name'],
-                description: $data['description'] ?? null,
+                name: $translatedName,
+                description: $translatedDescription,
                 price: $data['price'],
-                allergens: $data['allergens'] ?? null,
+                allergens: $translatedAllergens,
                 images: $imageFiles,
                 isActive: $data['is_active'] ?? true,
                 sortOrder: $nextSortOrder

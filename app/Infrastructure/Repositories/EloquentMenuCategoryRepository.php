@@ -5,6 +5,7 @@ namespace App\Infrastructure\Repositories;
 use App\Domain\Entities\MenuCategory;
 use App\Domain\Repositories\MenuCategoryRepositoryInterface;
 use App\Infrastructure\Models\MenuCategoryModel;
+use Illuminate\Support\Facades\DB;
 
 class EloquentMenuCategoryRepository implements MenuCategoryRepositoryInterface
 {
@@ -105,5 +106,13 @@ class EloquentMenuCategoryRepository implements MenuCategoryRepositoryInterface
             description: $model->description,
             sortOrder: $model->sort_order
         );
+    }
+
+    public function countByRestaurantId(string $restaurantId): int
+    {
+        return DB::table('menu_categories')
+            ->join('menus', 'menu_categories.menu_id', '=', 'menus.id')
+            ->where('menus.restaurant_id', $restaurantId)
+            ->count();
     }
 }

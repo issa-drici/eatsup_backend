@@ -11,13 +11,15 @@ use App\Domain\Repositories\MenuRepositoryInterface;
 use App\Domain\Repositories\RestaurantRepositoryInterface;
 use App\Exceptions\UnauthorizedException;
 use App\Exceptions\PlanLimitException;
+use App\Application\Usecases\Translation\TranslateTextToMultipleLanguagesUsecase;
 
 class CreateMenuCategoryUsecase
 {
     public function __construct(
         private MenuCategoryRepositoryInterface $menuCategoryRepository,
         private MenuRepositoryInterface $menuRepository,
-        private RestaurantRepositoryInterface $restaurantRepository
+        private RestaurantRepositoryInterface $restaurantRepository,
+        private TranslateTextToMultipleLanguagesUsecase $translateUsecase
     ) {
     }
 
@@ -58,12 +60,20 @@ class CreateMenuCategoryUsecase
         $maxSortOrder = $this->menuCategoryRepository->getMaxSortOrderByMenuId($menuId);
         $nextSortOrder = $maxSortOrder + 1;
 
+        // Traduire le nom et la description
+        $translatedName = $this->translateUsecase->execute($data['name']);
+        $translatedDescription = null;
+
+        if (isset($data['description']['fr'])) {
+            $translatedDescription = $this->translateUsecase->execute($data['description']);
+        }
+
         // 7. Créer l'entité
         $menuCategory = new MenuCategory(
             id: Str::uuid()->toString(),
             menuId: $menuId,
-            name: $data['name'],
-            description: $data['description'] ?? null,
+            name: $translatedName,
+            description: $translatedDescription,
             sortOrder: $nextSortOrder
         );
 
