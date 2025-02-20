@@ -4,6 +4,7 @@ namespace App\Application\Usecases\Menu;
 
 use App\Domain\Repositories\MenuRepositoryInterface;
 use App\Domain\Repositories\RestaurantRepositoryInterface;
+use App\Application\DTOs\MenuWithRestaurantDTO;
 
 class FindFirstMenuByRestaurantIdUsecase
 {
@@ -12,7 +13,7 @@ class FindFirstMenuByRestaurantIdUsecase
         private RestaurantRepositoryInterface $restaurantRepository
     ) {}
 
-    public function execute(string $restaurantId): mixed
+    public function execute(string $restaurantId): MenuWithRestaurantDTO
     {
         // 1. Vérifier si le restaurant existe
         $restaurant = $this->restaurantRepository->findById($restaurantId);
@@ -26,7 +27,25 @@ class FindFirstMenuByRestaurantIdUsecase
             throw new \Exception("No menu found for this restaurant.");
         }
 
-        // 3. Retourner le premier men
-        return $menus[0];
+        // 3. Retourner le premier menu avec les informations du restaurant
+        $firstMenu = $menus[0];
+        return new MenuWithRestaurantDTO(
+            id: $firstMenu->getId(),
+            name: $firstMenu->getName(),
+            status: $firstMenu->getStatus(),
+            banners: $firstMenu->getBanners(),
+            restaurant: [
+                'id' => $restaurant->getId(),
+                'name' => $restaurant->getName(),
+                'address' => $restaurant->getAddress(),
+                'phone' => $restaurant->getPhone(),
+                'logo_id' => $restaurant->getLogoId(),
+                'postal_code' => $restaurant->getPostalCode(),
+                'city' => $restaurant->getCity(),
+                'city_slug' => $restaurant->getCitySlug(),
+                'type_slug' => $restaurant->getTypeSlug(),
+                'name_slug' => $restaurant->getNameSlug()
+            ]
+        );
     }
-} 
+}
