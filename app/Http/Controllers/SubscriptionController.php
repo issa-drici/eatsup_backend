@@ -6,6 +6,8 @@ use App\Services\Discord\DiscordNotification;
 use Illuminate\Http\Request;
 use Laravel\Cashier\Exceptions\IncompletePayment;
 use Carbon\Carbon;
+use App\Mail\SubscriptionConfirmation;
+use Illuminate\Support\Facades\Mail;
 
 class SubscriptionController extends Controller
 {
@@ -33,6 +35,9 @@ class SubscriptionController extends Controller
 
             // Envoyer une notification Discord
             DiscordNotification::send('ventes', "Nouvelle vente : {$user->name} ({$user->email})");
+
+            // Envoyer le mail de confirmation
+            Mail::to($user->email)->send(new SubscriptionConfirmation($user));
 
             return response()->json([
                 'message' => 'Subscription successful',

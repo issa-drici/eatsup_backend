@@ -42,6 +42,7 @@ use App\Http\Controllers\Menu\UpdateMenuController;
 use App\Http\Controllers\WebsiteSession\CountWebsiteSessionsByRestaurantIdController;
 use App\Http\Controllers\WebsiteSession\CreateWebsiteSessionController;
 use App\Http\Controllers\Restaurant\FindMenuInfosHomeByRestaurantIdController;
+use App\Http\Controllers\Restaurant\GetRestaurantOnboardingStatusController;
 
 // Routes nécessitant l'authentification via Sanctum
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -181,6 +182,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/restaurant/{restaurantId}/menu-infos-home', FindMenuInfosHomeByRestaurantIdController::class)
         ->name('restaurant.menu-infos-home');
+
+    Route::get('/restaurant/{restaurantId}/onboarding-status', GetRestaurantOnboardingStatusController::class)
+        ->name('restaurant.onboarding-status');
 });
 
 // Route publique pour les QR codes

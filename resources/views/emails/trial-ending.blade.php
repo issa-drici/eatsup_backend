@@ -4,9 +4,9 @@
     <style>
         body { font-family: Arial, sans-serif; line-height: 1.6; }
         .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .button { 
+        .button {
             background-color: #4F46E5;
-            color: white;
+            color: #FFF;
             padding: 12px 24px;
             text-decoration: none;
             border-radius: 4px;
@@ -18,9 +18,9 @@
 <body>
     <div class="container">
         <h1>Votre période d'essai Premium se termine bientôt</h1>
-        
+
         <p>Bonjour {{ $userName }},</p>
-        
+
         <p>Votre période d'essai Premium se termine dans <strong>{{ $daysLeft }} jours</strong>.</p>
 
         <p class="warning">Pour éviter de perdre l'accès aux fonctionnalités Premium :</p>
@@ -37,4 +37,4 @@
         <p>L'équipe EatsUp</p>
     </div>
 </body>
-</html> 
+</html>
