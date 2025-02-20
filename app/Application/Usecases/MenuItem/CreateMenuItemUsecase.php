@@ -24,8 +24,7 @@ class CreateMenuItemUsecase
         private RestaurantRepositoryInterface $restaurantRepository,
         private CreateFileUsecase $createFileUsecase,
         private TranslateTextToMultipleLanguagesUsecase $translateUsecase
-    ) {
-    }
+    ) {}
 
     public function execute(array $data): MenuItem
     {
@@ -73,7 +72,7 @@ class CreateMenuItemUsecase
             if (isset($data['images']) && is_array($data['images'])) {
                 $folderUuid = Str::uuid()->toString();
                 $securePath = "menu-items/images/{$folderUuid}";
-                
+
                 foreach ($data['images'] as $image) {
                     $file = $this->createFileUsecase->execute($image, $securePath);
                     $imageFiles[] = [
@@ -92,8 +91,11 @@ class CreateMenuItemUsecase
             $translatedDescription = null;
             $translatedAllergens = null;
 
-            if (isset($data['description'])) {
+
+            if (isset($data['description']['fr']) && !empty($data['description']['fr'])) {
                 $translatedDescription = $this->translateUsecase->execute($data['description']);
+            } else {
+                $translatedDescription = $data['description'];
             }
 
             if (isset($data['allergens'])) {

@@ -64,8 +64,10 @@ class CreateMenuCategoryUsecase
         $translatedName = $this->translateUsecase->execute($data['name']);
         $translatedDescription = null;
 
-        if (isset($data['description']['fr'])) {
+        if (isset($data['description']['fr']) && !empty($data['description']['fr'])) {
             $translatedDescription = $this->translateUsecase->execute($data['description']);
+        } else {
+            $translatedDescription = $data['description'];
         }
 
         // 7. Créer l'entité
