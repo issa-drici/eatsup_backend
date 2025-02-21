@@ -4,13 +4,15 @@ namespace App\Application\Usecases\Menu;
 
 use App\Domain\Repositories\MenuRepositoryInterface;
 use App\Domain\Repositories\RestaurantRepositoryInterface;
+use App\Domain\Repositories\FileRepositoryInterface;
 use App\Application\DTOs\MenuWithRestaurantDTO;
 
 class FindFirstMenuByRestaurantIdUsecase
 {
     public function __construct(
         private MenuRepositoryInterface $menuRepository,
-        private RestaurantRepositoryInterface $restaurantRepository
+        private RestaurantRepositoryInterface $restaurantRepository,
+        private FileRepositoryInterface $fileRepository
     ) {}
 
     public function execute(string $restaurantId): MenuWithRestaurantDTO
@@ -27,7 +29,19 @@ class FindFirstMenuByRestaurantIdUsecase
             throw new \Exception("No menu found for this restaurant.");
         }
 
-        // 3. Retourner le premier menu avec les informations du restaurant
+        // 3. Récupérer le fichier logo si présent
+        $logo = null;
+        if ($restaurant->getLogoId()) {
+            $file = $this->fileRepository->findById($restaurant->getLogoId());
+            if ($file) {
+                $logo = [
+                    'id' => $file->getId(),
+                    'url' => $file->getUrl()
+                ];
+            }
+        }
+
+        // 4. Retourner le premier menu avec les informations du restaurant
         $firstMenu = $menus[0];
         return new MenuWithRestaurantDTO(
             id: $firstMenu->getId(),
@@ -39,7 +53,7 @@ class FindFirstMenuByRestaurantIdUsecase
                 'name' => $restaurant->getName(),
                 'address' => $restaurant->getAddress(),
                 'phone' => $restaurant->getPhone(),
-                'logo_id' => $restaurant->getLogoId(),
+                'logo' => $logo,
                 'postal_code' => $restaurant->getPostalCode(),
                 'city' => $restaurant->getCity(),
                 'city_slug' => $restaurant->getCitySlug(),
