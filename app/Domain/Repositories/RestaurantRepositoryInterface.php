@@ -17,4 +17,5 @@ interface RestaurantRepositoryInterface
     public function update(Restaurant $restaurant): Restaurant;
     public function findById(string $id): ?Restaurant;
     public function findBySlug(string $typeSlug, string $citySlug, string $nameSlug): ?Restaurant;
+    public function findAll(): array;
 }

@@ -43,6 +43,7 @@ use App\Http\Controllers\WebsiteSession\CountWebsiteSessionsByRestaurantIdContro
 use App\Http\Controllers\WebsiteSession\CreateWebsiteSessionController;
 use App\Http\Controllers\Restaurant\FindMenuInfosHomeByRestaurantIdController;
 use App\Http\Controllers\Restaurant\GetRestaurantOnboardingStatusController;
+use App\Http\Controllers\Restaurant\FindAllRestaurantLinksPublicController;
 
 // Routes nécessitant l'authentification via Sanctum
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -210,3 +211,7 @@ Route::get('/public/type/{typeSlug}/ville/{citySlug}/name/{nameSlug}/website', F
 // Route publique pour créer une session website
 Route::post('/website/{websiteId}/websiteSession/create', CreateWebsiteSessionController::class)
     ->name('website-sessions.create');
+
+// Route publique pour obtenir la liste des liens des restaurants
+Route::get('/public/restaurant-links', FindAllRestaurantLinksPublicController::class)
+    ->name('restaurants.public.links');

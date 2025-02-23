@@ -365,6 +365,18 @@ class EloquentRestaurantRepository implements RestaurantRepositoryInterface
         return $this->toDomainEntity($model);
     }
 
+    public function findAll(): array
+    {
+        $restaurants = RestaurantModel::whereNotNull('type_slug')
+            ->whereNotNull('city_slug')
+            ->whereNotNull('name_slug')
+            ->get();
+
+        return $restaurants->map(function ($model) {
+            return $this->toDomainEntity($model);
+        })->all();
+    }
+
     private function toDomainEntity(RestaurantModel $model): Restaurant
     {
         return new Restaurant(
