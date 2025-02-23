@@ -50,9 +50,21 @@ class FindWebsiteByRestaurantIdUsecase
             }
         }
 
+        // 5. Récupérer le fichier logo si présent
+        $logo = null;
+        if ($restaurant->getLogoId()) {
+            $file = $this->fileRepository->findById($restaurant->getLogoId());
+            if ($file) {
+                $logo = [
+                    'id' => $file->getId(),
+                    'url' => $file->getUrl()
+                ];
+            }
+        }
+
+
         return new WebsiteDTO(
             id: $website->getId(),
-            restaurantId: $website->getRestaurantId(),
             menuId: $website->getMenuId(),
             domain: $website->getDomain(),
             title: $website->getTitle(),
@@ -61,10 +73,13 @@ class FindWebsiteByRestaurantIdUsecase
             openingHours: $website->getOpeningHours(),
             themeConfig: $website->getThemeConfig(),
             restaurant: [
+                'id' => $restaurant->getId(),
                 'name' => $restaurant->getName(),
                 'address' => $restaurant->getAddress(),
                 'phone' => $restaurant->getPhone(),
-                'logo_id' => $restaurant->getLogoId(),
+                'postal_code' => $restaurant->getPostalCode(),
+                'city' => $restaurant->getCity(),
+                'logo' => $logo,
             ],
         );
     }

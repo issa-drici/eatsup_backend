@@ -19,7 +19,6 @@ class FindWebsiteBySlugPublicController extends Controller
         return response()->json([
             'data' => [
                 'id' => $website->getId(),
-                'restaurant_id' => $website->getRestaurantId(),
                 'menu_id' => $website->getMenuId(),
                 'domain' => $website->getDomain(),
                 'title' => $website->getTitle(),
@@ -31,4 +30,4 @@ class FindWebsiteBySlugPublicController extends Controller
             ]
         ]);
     }
-} 
+}

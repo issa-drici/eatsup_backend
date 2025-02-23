@@ -45,7 +45,6 @@ class FindWebsiteByRestaurantIdPublicUsecase
         // 4. Créer et retourner le DTO
         return new WebsiteDTO(
             id: $website->getId(),
-            restaurantId: $website->getRestaurantId(),
             menuId: $website->getMenuId(),
             domain: $website->getDomain(),
             title: $website->getTitle(),
@@ -54,11 +53,14 @@ class FindWebsiteByRestaurantIdPublicUsecase
             openingHours: $website->getOpeningHours(),
             themeConfig: $website->getThemeConfig(),
             restaurant: [
+                'id' => $restaurant->getId(),
                 'name' => $restaurant->getName(),
                 'address' => $restaurant->getAddress(),
                 'phone' => $restaurant->getPhone(),
-                'logo_id' => $restaurant->getLogoId(),
+                'postal_code' => $restaurant->getPostalCode(),
+                'city' => $restaurant->getCity(),
+                'logo' => $logo,
             ]
         );
     }
-} 
+}

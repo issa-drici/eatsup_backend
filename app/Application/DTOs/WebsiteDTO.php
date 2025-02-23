@@ -6,7 +6,6 @@ class WebsiteDTO
 {
     public function __construct(
         public string $id,
-        public string $restaurantId,
         public ?string $menuId,
         public ?string $domain,
         public ?array $title,
@@ -21,11 +20,6 @@ class WebsiteDTO
     public function getId(): string
     {
         return $this->id;
-    }
-    
-    public function getRestaurantId(): string
-    {
-        return $this->restaurantId;
     }
 
     public function getMenuId(): ?string
@@ -72,7 +66,6 @@ class WebsiteDTO
     {
         return [
             'id' => $this->id,
-            'restaurant_id' => $this->restaurantId,
             'menu_id' => $this->menuId,
             'domain' => $this->domain,
             'title' => $this->title,
@@ -83,4 +76,4 @@ class WebsiteDTO
             'restaurant' => $this->restaurant,
         ];
     }
-} 
+}
