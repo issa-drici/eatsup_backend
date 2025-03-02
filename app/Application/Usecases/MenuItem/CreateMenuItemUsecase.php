@@ -124,7 +124,7 @@ class CreateMenuItemUsecase
     {
         return match ($plan) {
             'basic' => 15,
-            'premium' => 50,
+            'premium' => 9999,
             'enterprise' => PHP_INT_MAX,
             default => 0,
         };

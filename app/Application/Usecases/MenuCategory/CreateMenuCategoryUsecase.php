@@ -87,7 +87,7 @@ class CreateMenuCategoryUsecase
     {
         return match ($plan) {
             'basic' => 5,
-            'premium' => 10,
+            'premium' => 9999,
             'enterprise' => 9999,
             default => 5,
         };
