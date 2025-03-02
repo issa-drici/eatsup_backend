@@ -8,7 +8,7 @@ use App\Application\DTOs\TranslationRequestDTO;
 class OpenAITranslationService
 {
     private array $supportedLanguages = ['fr', 'en', 'es', 'de', 'it', 'nl', 'pt', 'ar'];
-    
+
     public function __construct(private Client $openAI) {}
 
     public function translate(TranslationRequestDTO $request): array
@@ -21,7 +21,8 @@ Tu es expert dans la traduction tout en gardant le sens initial et en utilisant 
 Règles :
 - Génère UNIQUEMENT du JSON valide
 - Rapproche-toi au maximum du sens voulu tout en gardant une expression naturelle dans chaque langue
-- Traduis toujours à partir de la valeur en français
+- Traduis toujours à partir de la valeur en français (ne traduis jamais la valeur en français)
+- Si un mot semble être brandé, ne le traduit pas et garde le tel quel
 - N'ajoute aucun caractère d'échappement ou retour à la ligne
 - Le JSON doit contenir toutes les langues supportées
 EOT;
@@ -35,7 +36,7 @@ EOT;
                 ],
                 [
                     'role' => 'user',
-                    'content' => "Traduis ce texte du {$request->sourceLanguage} vers : " . 
+                    'content' => "Traduis ce texte du {$request->sourceLanguage} vers : " .
                                 implode(', ', $request->targetLanguages) . ".\n\n" .
                                 "Texte à traduire : {$request->text}"
                 ],
@@ -45,7 +46,7 @@ EOT;
         ]);
 
         $translations = json_decode($response->choices[0]->message->content, true);
-        
+
         if (json_last_error() !== JSON_ERROR_NONE) {
             return [$request->sourceLanguage => $request->text];
         }
@@ -57,4 +58,4 @@ EOT;
     {
         return $this->supportedLanguages;
     }
-} 
+}
