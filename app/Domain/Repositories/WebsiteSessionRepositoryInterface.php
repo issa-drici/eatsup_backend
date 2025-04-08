@@ -8,5 +8,5 @@ interface WebsiteSessionRepositoryInterface
 {
     public function create(WebsiteSession $websiteSession): WebsiteSession;
     public function countByRestaurantId(string $restaurantId): int;
-    public function findRecentByAttributes(string $websiteId, string $ipAddress, string $userAgent, int $seconds): ?WebsiteSession;
-} 
+    public function findRecentByAttributes(string $websiteId, string $ipAddress, string $userAgent, int $seconds, bool $forUpdate = false): ?WebsiteSession;
+}

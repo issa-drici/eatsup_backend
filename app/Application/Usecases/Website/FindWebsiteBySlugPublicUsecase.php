@@ -6,16 +6,19 @@ use App\Domain\Repositories\WebsiteRepositoryInterface;
 use App\Domain\Repositories\RestaurantRepositoryInterface;
 use App\Domain\Repositories\FileRepositoryInterface;
 use App\Application\DTOs\WebsiteDTO;
+use App\Application\Usecases\WebsiteSession\CreateWebsiteSessionUsecase;
+use Illuminate\Http\Request;
 
 class FindWebsiteBySlugPublicUsecase
 {
     public function __construct(
         private WebsiteRepositoryInterface $websiteRepository,
         private RestaurantRepositoryInterface $restaurantRepository,
-        private FileRepositoryInterface $fileRepository
+        private FileRepositoryInterface $fileRepository,
+        private CreateWebsiteSessionUsecase $createWebsiteSessionUsecase
     ) {}
 
-    public function execute(string $typeSlug, string $citySlug, string $nameSlug): WebsiteDTO
+    public function execute(Request $request, string $typeSlug, string $citySlug, string $nameSlug): WebsiteDTO
     {
 
         // 1. Trouver le restaurant correspondant aux slugs
@@ -54,6 +57,15 @@ class FindWebsiteBySlugPublicUsecase
                 ];
             }
         }
+
+        $data = [
+            'website_id' => $website->getId(),
+            'ip_address' => $request->input('ip_address') ?? $request->ip(),
+            'user_agent' => $request->userAgent(),
+            'location' => $request->input('location'),
+        ];
+
+        $session = $this->createWebsiteSessionUsecase->execute($data);
 
         // 5. Créer et retourner le DTO
         return new WebsiteDTO(

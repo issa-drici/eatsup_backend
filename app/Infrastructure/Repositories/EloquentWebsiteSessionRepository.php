@@ -29,15 +29,20 @@ class EloquentWebsiteSessionRepository implements WebsiteSessionRepositoryInterf
         return $this->toDomainEntity($model);
     }
 
-    public function findRecentByAttributes(string $websiteId, string $ipAddress, string $userAgent, int $seconds): ?WebsiteSession
+    public function findRecentByAttributes(string $websiteId, string $ipAddress, string $userAgent, int $seconds, bool $forUpdate = false): ?WebsiteSession
     {
         $recentTime = now()->subSeconds($seconds);
-        
-        $model = WebsiteSessionModel::where('website_id', $websiteId)
+
+        $query = WebsiteSessionModel::where('website_id', $websiteId)
             ->where('ip_address', $ipAddress)
             ->where('user_agent', $userAgent)
-            ->where('created_at', '>=', $recentTime)
-            ->first();
+            ->where('created_at', '>=', $recentTime);
+
+        if ($forUpdate) {
+            $query->lockForUpdate();
+        }
+
+        $model = $query->first();
 
         return $model ? $this->toDomainEntity($model) : null;
     }
@@ -55,4 +60,4 @@ class EloquentWebsiteSessionRepository implements WebsiteSessionRepositoryInterf
             updatedAt: $model->updated_at->format('Y-m-d H:i:s')
         );
     }
-} 
+}
