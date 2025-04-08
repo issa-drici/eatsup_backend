@@ -13,8 +13,7 @@ class FindWebsiteBySlugPublicUsecase
         private WebsiteRepositoryInterface $websiteRepository,
         private RestaurantRepositoryInterface $restaurantRepository,
         private FileRepositoryInterface $fileRepository
-    ) {
-    }
+    ) {}
 
     public function execute(string $typeSlug, string $citySlug, string $nameSlug): WebsiteDTO
     {
@@ -22,13 +21,13 @@ class FindWebsiteBySlugPublicUsecase
         // 1. Trouver le restaurant correspondant aux slugs
         $restaurant = $this->restaurantRepository->findBySlug($typeSlug, $citySlug, $nameSlug);
         if (!$restaurant) {
-            throw new \Exception("Restaurant not found.");
+            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException("Restaurant non trouvé.");
         }
 
         // 2. Récupérer le site web
         $website = $this->websiteRepository->findByRestaurantId($restaurant->getId());
         if (!$website) {
-            throw new \Exception("Website not found for this restaurant.");
+            throw new \Symfony\Component\HttpKernel\Exception\NotFoundHttpException("Site web non trouvé pour ce restaurant.");
         }
 
         // 3. Récupérer l'image de présentation si elle existe
