@@ -101,6 +101,6 @@ class AiMenuGeneratorUsecase
         $cleanPrice = str_replace(',', '.', $cleanPrice);
         // Convertir en float puis en centimes
         $priceInEuros = (float) $cleanPrice;
-        return (int) round($priceInEuros * 100);
+        return (int) round($priceInEuros);
     }
 }
