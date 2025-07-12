@@ -17,7 +17,7 @@ class GenerateAiMenuJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $timeout = 300; // 5 minutes
-    public $tries = 1;
+    public $tries = 3;
 
     public function __construct(
         private string $restaurantId,
@@ -31,9 +31,18 @@ class GenerateAiMenuJob implements ShouldQueue
     {
         $cacheKey = "ai_menu_generation_{$this->jobId}";
 
+        // Log de début pour debug
+        Log::info('AI menu generation job started', [
+            'job_id' => $this->jobId,
+            'restaurant_id' => $this->restaurantId,
+            'menu_id' => $this->menuId,
+            'user_id' => $this->userId
+        ]);
+
         // Authentifier l'utilisateur pour le contexte du job
         if ($this->userId) {
             Auth::loginUsingId($this->userId);
+            Log::info('User authenticated in job', ['user_id' => $this->userId]);
         }
 
         // Statut initial : processing
@@ -43,6 +52,11 @@ class GenerateAiMenuJob implements ShouldQueue
         ], 3600);
 
         try {
+            Log::info('Starting AI menu generation usecase', [
+                'job_id' => $this->jobId,
+                'ai_menu_data' => $this->aiMenuData
+            ]);
+
             $result = $aiMenuGeneratorUsecase->execute(
                 $this->restaurantId,
                 $this->menuId,
@@ -59,6 +73,18 @@ class GenerateAiMenuJob implements ShouldQueue
             ], 3600);
 
         } catch (\Exception $e) {
+            // Log détaillé de l'erreur
+            Log::error('AI menu generation failed - DETAILED ERROR', [
+                'job_id' => $this->jobId,
+                'restaurant_id' => $this->restaurantId,
+                'menu_id' => $this->menuId,
+                'error_message' => $e->getMessage(),
+                'error_file' => $e->getFile(),
+                'error_line' => $e->getLine(),
+                'error_class' => get_class($e),
+                'trace' => $e->getTraceAsString()
+            ]);
+
             // Marquer comme échoué
             Cache::put($cacheKey, [
                 'status' => 'failed',
@@ -69,15 +95,6 @@ class GenerateAiMenuJob implements ShouldQueue
                     'line' => $e->getLine()
                 ]
             ], 3600);
-
-            // On garde le log d'erreur fatale
-            Log::error('AI menu generation failed', [
-                'job_id' => $this->jobId,
-                'restaurant_id' => $this->restaurantId,
-                'menu_id' => $this->menuId,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
 
             throw $e;
         }
