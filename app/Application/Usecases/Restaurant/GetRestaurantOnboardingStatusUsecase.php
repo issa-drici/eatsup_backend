@@ -81,20 +81,20 @@ class GetRestaurantOnboardingStatusUsecase
                 'url' => "/admin/restaurant/{$restaurantId}/update",
                 'icon' => '🎨'
             ],
-            [
-                'id' => 5,
-                'title' => 'Définissez vos horaires d\'ouverture',
-                'completed' => $hasOpeningHours,
-                'url' => "/admin/restaurant/{$restaurantId}/website/{$websiteId}/update",
-                'icon' => '⏰'
-            ],
-            [
-                'id' => 6,
-                'title' => 'Partagez votre restaurant sur vos réseaux',
-                'completed' => $hasSocialLinks,
-                'url' => "/restaurant/{$restaurantId}/settings/social",
-                'icon' => '🔗'
-            ]
+            // [
+            //     'id' => 5,
+            //     'title' => 'Définissez vos horaires d\'ouverture',
+            //     'completed' => $hasOpeningHours,
+            //     'url' => "/admin/restaurant/{$restaurantId}/website/{$websiteId}/update",
+            //     'icon' => '⏰'
+            // ],
+            // [
+            //     'id' => 6,
+            //     'title' => 'Partagez votre restaurant sur vos réseaux',
+            //     'completed' => $hasSocialLinks,
+            //     'url' => "/restaurant/{$restaurantId}/settings/social",
+            //     'icon' => '🔗'
+            // ]
         ];
     }
 }

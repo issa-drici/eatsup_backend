@@ -44,6 +44,8 @@ use App\Http\Controllers\WebsiteSession\CreateWebsiteSessionController;
 use App\Http\Controllers\Restaurant\FindMenuInfosHomeByRestaurantIdController;
 use App\Http\Controllers\Restaurant\GetRestaurantOnboardingStatusController;
 use App\Http\Controllers\Restaurant\FindAllRestaurantLinksPublicController;
+use App\Http\Controllers\Menu\AiMenuGeneratorController;
+use App\Http\Controllers\Menu\AiMenuGeneratorStatusController;
 
 // Routes nécessitant l'authentification via Sanctum
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -186,6 +188,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::get('/restaurant/{restaurantId}/onboarding-status', GetRestaurantOnboardingStatusController::class)
         ->name('restaurant.onboarding-status');
+
+    // Route pour la génération de menu avec IA
+    Route::post('/restaurant/{restaurantId}/menu/{menuId}/ai-menu-generator/create', AiMenuGeneratorController::class)
+        ->name('menu.ai-generator.create');
+
+    // Route pour vérifier le statut de génération
+    Route::get('/ai-menu-generator/status/{jobId}', AiMenuGeneratorStatusController::class)
+        ->name('menu.ai-generator.status');
 });
 
 // Route publique pour les QR codes
